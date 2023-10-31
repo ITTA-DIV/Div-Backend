@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        springBootVersion = '3.0.5'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.moacon.da'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Springboot
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    // lombok
+    implementation('org.projectlombok:lombok')
+    annotationProcessor('org.projectlombok:lombok')
+    // jpa
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    // h2-database
+    implementation('com.h2database:h2')
+    // test
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('junit:junit:4.12')      // Junit 4.12 라이브러리 추가
+}
+
+test {
+    useJUnitPlatform()
+}
+
+test {
+    useJUnitPlatform()
+}
