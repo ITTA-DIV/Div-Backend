@@ -1,4 +1,4 @@
-package com.moacon.da.controller;
+package com.damoacon.app.controller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
