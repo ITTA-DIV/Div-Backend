@@ -29,3 +29,9 @@ replay_pid*
 .gradle/
 build/
 SpringBoot-Damoacon.iml
+
+### Database ###
+application.properties
+
+### Mac OS ###
+.DS_Store
