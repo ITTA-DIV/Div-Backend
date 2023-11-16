@@ -27,6 +27,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation('junit:junit:4.12')
     implementation 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
 }
 
 tasks.named('test') {
