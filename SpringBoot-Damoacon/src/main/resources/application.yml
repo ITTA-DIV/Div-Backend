@@ -1,7 +1,3 @@
-# Port
-server:
-  port: 8080
-
 # JPA
 spring:
   datasource:
