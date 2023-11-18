@@ -33,4 +33,6 @@ SpringBoot-Damoacon.iml
 ### Mac OS ###
 .DS_Store
 
+### Security ###
 application.properties
+
