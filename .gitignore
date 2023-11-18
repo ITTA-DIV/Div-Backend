@@ -30,8 +30,9 @@ replay_pid*
 build/
 SpringBoot-Damoacon.iml
 
-### Database ###
-application.properties
-
 ### Mac OS ###
 .DS_Store
+
+### Security ###
+application.properties
+
