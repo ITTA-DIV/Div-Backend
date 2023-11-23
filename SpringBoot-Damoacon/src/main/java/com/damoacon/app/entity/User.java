@@ -3,11 +3,12 @@ package com.damoacon.app.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="users")
+@Table(name="user")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class User {
@@ -24,7 +25,7 @@ public class User {
     @Column(nullable = false, name = "profile")
     private String profile;
 
-
+    @Builder
     public User (String email,String username,String profile){
         this.email=email;
         this.username=username;

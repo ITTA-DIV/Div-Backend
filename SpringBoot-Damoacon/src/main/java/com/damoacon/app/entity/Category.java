@@ -2,9 +2,9 @@ package com.damoacon.app.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Table(name="category")
@@ -19,6 +19,7 @@ public class Category {
     @Column(nullable = false,name = "category_name")
     private String category_name;
 
+    @Builder
     public Category(String category_name){
         this.category_name=category_name;
     }
