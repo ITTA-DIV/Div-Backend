@@ -2,6 +2,7 @@ package com.damoacon.app.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,9 +22,10 @@ public class Survey {
     private String answer;
 
     @OneToOne
-    @Column(nullable = false, name = "event")
+    @PrimaryKeyJoinColumn
     private Event event;
 
+    @Builder
     public Survey (String question,String answer,Event event){
         this.question=question;
         this.answer=answer;

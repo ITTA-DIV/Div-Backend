@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
@@ -47,14 +47,13 @@ public class Event {
     private String type;
 
     @ManyToOne
-    @Column(nullable = false, name = "cate")
+    @JoinColumn(name="category_id")
     private Category cate;
 
+    @Builder
     public Event (String title,String date,String price,String location,String address,String host,String link){
         this.title=title;
         this.date=date;
         this.price=price;
     }
-
-
 }

@@ -1,7 +1,9 @@
 package com.damoacon.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,24 +18,25 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @Column(nullable = false, name = "event")
+    @JoinColumn(name="event_id")
+    @NotNull
     private Event event;
 
     @OneToOne
-    @Column(nullable = false, name = "user")
+    @PrimaryKeyJoinColumn
     private User user;
 
     @Column(nullable = true, name = "content")
     private String content;
 
+    @Builder
     public Comment (Event event,User user,String content){
         this.event=event;
         this.user=user;
         this.content=content;
     }
+
     public void update (String content){
         this.content=content;
     }
-
-
 }
