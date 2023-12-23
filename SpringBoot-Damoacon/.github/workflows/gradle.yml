@@ -46,7 +46,7 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
 
     - name: Deploy
-      uses: appleboy/ssh-action@main
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
         username: ubuntu
