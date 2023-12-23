@@ -22,12 +22,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: make application-prod.yml
+    - name: Make application-prod.yml
       run: |
-	cd ../../SpringBoot-Damoacon/src/main/resources
-        touch ./application-prod.yml
-        echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml
-        
+        cd ../../SpringBoot-Damoacon/src/main/resources && touch ./application-prod.yml && echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
