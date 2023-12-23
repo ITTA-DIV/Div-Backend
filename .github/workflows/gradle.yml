@@ -24,7 +24,9 @@ jobs:
 
     - name: make application-prod.yml
       run: |
-        cd ../../SpringBoot-Damoacon/src/main/resources
+        cd ..
+	cd ..
+	cd SpringBoot-Damoacon/src/main/resources
         touch ./application-prod.yml
         echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml
         
