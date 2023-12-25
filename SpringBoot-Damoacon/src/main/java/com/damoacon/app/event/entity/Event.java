@@ -72,7 +72,7 @@ public class Event {
     private int is_permit;
 
     @ManyToOne
-    @MapsId("category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Builder

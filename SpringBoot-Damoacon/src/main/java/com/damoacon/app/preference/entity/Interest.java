@@ -19,11 +19,11 @@ public class Interest {
     private Long id;
 
     @ManyToOne
-    @MapsId("user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @MapsId("category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Builder

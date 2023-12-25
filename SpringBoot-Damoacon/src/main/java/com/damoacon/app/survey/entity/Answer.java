@@ -22,7 +22,7 @@ public class Answer {
     private int answer;
 
     @ManyToOne
-    @MapsId("survey_id")
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
     @Builder

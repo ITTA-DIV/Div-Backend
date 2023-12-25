@@ -19,11 +19,11 @@ public class Heart {
     private Long id;
 
     @ManyToOne
-    @MapsId("user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @MapsId("event_id")
+    @JoinColumn(name = "event_id")
     private Event event;
 
     @Builder

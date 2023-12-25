@@ -21,7 +21,7 @@ public class Survey {
     private String question;
 
     @ManyToOne
-    @MapsId("event_id")
+    @JoinColumn(name = "event_id")
     private Event event;
 
     @Builder
