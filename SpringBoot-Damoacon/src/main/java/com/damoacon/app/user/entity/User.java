@@ -8,16 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="user")
+@Table(name="User")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "user_id")
     private Long id;
-
-    @Column(nullable = false, name = "email")
-    private String email;
 
     @Column(nullable = false, name = "username")
     private String username;
@@ -25,10 +23,21 @@ public class User {
     @Column(nullable = false, name = "profile")
     private String profile;
 
+    @Column(nullable = false, name = "email")
+    private String email;
+
+    @Column(nullable = true, name = "nickname")
+    private String nickname;
+
+    @Column(nullable = false, name = "isManager")
+    private Integer isManager;
+
     @Builder
-    public User (String email,String username,String profile){
-        this.email=email;
-        this.username=username;
-        this.profile=profile;
+    public User (String username,String profile, String email, String nickname, Integer isManager) {
+        this.username = username;
+        this.profile = profile;
+        this.email = email;
+        this.nickname = nickname;
+        this.isManager = isManager;
     }
 }
