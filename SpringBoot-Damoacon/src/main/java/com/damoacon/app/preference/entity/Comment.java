@@ -1,4 +1,4 @@
-package com.damoacon.app.survey.entity;
+package com.damoacon.app.preference.entity;
 
 import com.damoacon.app.event.entity.Event;
 import com.damoacon.app.user.entity.User;
