@@ -47,6 +47,10 @@ public class Event {
     @NotNull
     private String host;
 
+    @Column(name = "host_profile")
+    @NotNull
+    private String hostProfile;
+
     @Column(name = "link")
     @NotNull
     private String link;
@@ -76,7 +80,7 @@ public class Event {
     private Category category;
 
     @Builder
-    public Event(String title, Timestamp startDate, Timestamp endDate, String price, String location, String address, String host, String link, Timestamp applyStartDate, Timestamp applyEndDate, String type, String thumbnail, int isPermit, Category category) {
+    public Event(String title, Timestamp startDate, Timestamp endDate, String price, String location, String address, String host, String hostProfile, String link, Timestamp applyStartDate, Timestamp applyEndDate, String type, String thumbnail, int isPermit, Category category) {
         this.title = title;
         this.startDate = startDate;
         this.end_date = endDate;
@@ -84,6 +88,7 @@ public class Event {
         this.location = location;
         this.address = address;
         this.host = host;
+        this.hostProfile = hostProfile;
         this.link = link;
         this.applyStartDate = applyStartDate;
         this.applyEndDate = applyEndDate;
