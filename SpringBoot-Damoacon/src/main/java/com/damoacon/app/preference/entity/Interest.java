@@ -3,7 +3,6 @@ package com.damoacon.app.preference.entity;
 import com.damoacon.app.event.entity.Category;
 import com.damoacon.app.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,18 +19,16 @@ public class Interest {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    @NotNull
+    @MapsId("user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="category_id")
-    @NotNull
-    private Category cate;
+    @MapsId("category_id")
+    private Category category;
 
     @Builder
-    public Interest(User user, Category cate){
-        this.user=user;
-        this.cate=cate;
+    public Interest(User user, Category category) {
+        this.user = user;
+        this.category = category;
     }
 }
