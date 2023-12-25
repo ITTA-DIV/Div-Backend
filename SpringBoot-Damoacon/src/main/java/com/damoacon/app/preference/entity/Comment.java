@@ -19,11 +19,11 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn
+    @MapsId("event_id")
     private Event event;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn
+    @MapsId("user_id")
     private User user;
 
     @Column(nullable = false, name = "content")
