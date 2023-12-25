@@ -3,7 +3,6 @@ package com.damoacon.app.preference.entity;
 import com.damoacon.app.event.entity.Event;
 import com.damoacon.app.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,18 +19,16 @@ public class Heart {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    @NotNull
+    @MapsId("user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="event_id")
-    @NotNull
+    @MapsId("event_id")
     private Event event;
 
     @Builder
-    public Heart(User user, Event event){
-        this.event=event;
-        this.user=user;
+    public Heart(User user, Event event) {
+        this.event = event;
+        this.user = user;
     }
 }
