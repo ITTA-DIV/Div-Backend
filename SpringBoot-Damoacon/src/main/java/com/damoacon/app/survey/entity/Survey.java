@@ -13,27 +13,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Survey {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "survey_id")
     private Long id;
 
     @Column(nullable = false, name = "question")
     private String question;
 
-    @Column(nullable = true, name = "answer")
-    private String answer;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @ManyToOne
+    @MapsId("event_id")
     private Event event;
 
     @Builder
-    public Survey (String question,String answer,Event event){
-        this.question=question;
-        this.answer=answer;
-        this.event=event;
+    public Survey (String question, Event event){
+        this.question = question;
+        this.event = event;
     }
-    public void update (String question,String answer){
-        this.question=question;
-        this.answer=answer;
+    public void update (String question){
+        this.question = question;
     }
 }
