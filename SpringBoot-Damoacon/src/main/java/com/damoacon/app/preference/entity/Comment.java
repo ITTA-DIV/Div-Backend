@@ -3,7 +3,6 @@ package com.damoacon.app.preference.entity;
 import com.damoacon.app.event.entity.Event;
 import com.damoacon.app.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,25 +19,24 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="event_id")
-    @NotNull
+    @PrimaryKeyJoinColumn
     private Event event;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private User user;
 
-    @Column(nullable = true, name = "content")
+    @Column(nullable = false, name = "content")
     private String content;
 
     @Builder
-    public Comment (Event event,User user,String content){
-        this.event=event;
-        this.user=user;
-        this.content=content;
+    public Comment (Event event, User user, String content) {
+        this.event = event;
+        this.user = user;
+        this.content = content;
     }
 
-    public void update (String content){
-        this.content=content;
+    public void update (String content) {
+        this.content = content;
     }
 }
