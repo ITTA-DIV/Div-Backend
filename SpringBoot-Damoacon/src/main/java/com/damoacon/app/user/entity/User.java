@@ -1,4 +1,4 @@
-package com.damoacon.app.entity;
+package com.damoacon.app.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;

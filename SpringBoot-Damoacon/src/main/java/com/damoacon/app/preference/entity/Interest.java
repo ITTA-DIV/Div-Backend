@@ -1,5 +1,7 @@
-package com.damoacon.app.entity;
+package com.damoacon.app.preference.entity;
 
+import com.damoacon.app.event.entity.Category;
+import com.damoacon.app.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

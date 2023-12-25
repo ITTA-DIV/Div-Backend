@@ -1,5 +1,6 @@
-package com.damoacon.app.entity;
+package com.damoacon.app.survey.entity;
 
+import com.damoacon.app.event.entity.Event;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
