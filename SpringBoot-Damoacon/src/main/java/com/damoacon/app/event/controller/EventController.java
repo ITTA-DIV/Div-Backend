@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,8 +53,7 @@ public class EventController {
             // 프로세스의 출력을 문자열로 반환
             return ResponseEntity.ok(jsonString);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to execute Python script." + e.getStackTrace());
+            return ResponseEntity.status(500).body("Failed to execute Python script.\n" + Arrays.toString(e.getStackTrace()));
         }
     }
 }
