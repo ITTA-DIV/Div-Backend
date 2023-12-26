@@ -53,7 +53,7 @@ public class EventController {
             return ResponseEntity.ok(jsonString);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to execute Python script.");
+            return ResponseEntity.status(500).body("Failed to execute Python script." + e.getStackTrace());
         }
     }
 }
