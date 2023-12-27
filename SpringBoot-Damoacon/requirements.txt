@@ -1,1 +1,6 @@
-requests beautifulsoup4 pandas pymysql selenium chromedriver-autoinstaller
+requests
+beautifulsoup4
+pandas
+pymysql
+selenium
+chromedriver-autoinstaller
