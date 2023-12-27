@@ -1,15 +1,13 @@
-# 단일 스테이지 사용
 FROM openjdk:17-jdk
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
-
-FROM python:3.10
 
 # 작업 디렉토리 설정
 WORKDIR /app
 
 # 가상환경 생성
-RUN python -m venv /app/venv
+RUN apt-get update && apt-get install -y python3-venv
+RUN python3 -m venv /app/venv
 
 # 가상환경 활성화
 ENV PATH="/app/venv/bin:$PATH"
