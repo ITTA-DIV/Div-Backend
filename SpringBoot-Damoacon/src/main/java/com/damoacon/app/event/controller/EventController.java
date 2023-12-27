@@ -20,10 +20,10 @@ public class EventController {
             String pythonScript = "SpringBoot-Damoacon/crawling/test.py";
 
             // Python 가상 환경 경로
-            String virtualEnvPath = "/home/ubuntu/crawlingenv/bin/python3.10";
+            String virtualEnvPath = "/app/venv/bin/python3.10";
 
             // 파이썬 모듈들의 경로
-            String pythonModulesPath = "/home/ubuntu/crawlingenv/lib/python3.10/site-packages";
+            String pythonModulesPath = "/app/venv/lib/python3.10/site-packages";
 
             // 프로세스 빌더 생성
             ProcessBuilder processBuilder = new ProcessBuilder(virtualEnvPath, pythonScript);
