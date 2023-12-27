@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk AS builder
 ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} /app/app.jar
+COPY ${JAR_FILE} app.jar
 
 FROM python:3.10
 WORKDIR /app
@@ -16,4 +16,4 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # 실행 명령어
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app.jar"]
