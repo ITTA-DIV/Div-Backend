@@ -1,13 +1,10 @@
-FROM openjdk:17-jdk AS builder
+# 단일 스테이지 사용
+FROM openjdk:17-jdk
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
-# Multi-Stage Build의 두 번째 단계: 최종 이미지
-FROM python:3.10
+# 작업 디렉토리 설정
 WORKDIR /app
-
-# Java 애플리케이션 JAR 파일 복사
-COPY --from=builder app.jar /app/app.jar
 
 # 가상환경 생성
 RUN python -m venv /app/venv
@@ -15,9 +12,9 @@ RUN python -m venv /app/venv
 # 가상환경 활성화
 ENV PATH="/app/venv/bin:$PATH"
 
-# 필요한 Python 라이브러리 설치
+# Python 의존성 복사 및 설치
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
-# 최종 이미지에서의 실행 명령어
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.jar"]
+# 최종 이미지를 위한 실행 명령어 설정
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app.jar"]
