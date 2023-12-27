@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-alpine
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
@@ -6,8 +6,8 @@ COPY ${JAR_FILE} app.jar
 WORKDIR /app
 
 # 가상환경 생성
-RUN apt update && apt install -y python3-venv
-RUN python3 -m venv /app/venv
+RUN apk update && apk install -y python3.10-venv
+RUN python3.10 -m venv /app/venv
 
 # 가상환경 활성화
 ENV PATH="/app/venv/bin:$PATH"
