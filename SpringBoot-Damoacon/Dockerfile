@@ -3,6 +3,8 @@ FROM openjdk:17-jdk
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
+FROM python:3.10
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
