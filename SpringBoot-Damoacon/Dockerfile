@@ -16,4 +16,4 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # 실행 명령어
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.jar"]
