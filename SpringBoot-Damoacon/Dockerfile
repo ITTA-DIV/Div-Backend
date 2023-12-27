@@ -6,7 +6,7 @@ COPY ${JAR_FILE} app.jar
 WORKDIR /app
 
 # 가상환경 생성
-RUN apt-get update && apt-get install -y python3-venv
+RUN apt update && apt install -y python3-venv
 RUN python3 -m venv /app/venv
 
 # 가상환경 활성화
