@@ -1,4 +1,4 @@
-package com.damoacon.app.entity;
+package com.damoacon.app.survey.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,28 +8,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="heart")
+@Table(name="answer")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class Heart {
+public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "heart_id")
+    @Column(nullable = false, name = "answer_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @Column(nullable = false, name = "answer")
     @NotNull
-    private User user;
+    private int answer;
 
     @ManyToOne
-    @JoinColumn(name="event_id")
-    @NotNull
-    private Event event;
+    @JoinColumn(name = "survey_id")
+    private Survey survey;
 
     @Builder
-    public Heart(User user, Event event){
-        this.event=event;
-        this.user=user;
+    public Answer(int answer, Survey survey) {
+        this.answer = answer;
+        this.survey = survey;
     }
 }
