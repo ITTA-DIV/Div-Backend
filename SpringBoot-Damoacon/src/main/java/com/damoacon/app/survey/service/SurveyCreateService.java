@@ -26,20 +26,13 @@ public class SurveyCreateService {
 
     public SurveyCreateDto surveyCreate(SurveyCreateDto requestDto) throws Exception {
         try {
-
-            System.out.println(requestDto.getQuestion());
             long event_id= requestDto.getEvent_id();
-            System.out.println(event_id);
             Optional <Event> eventOptional = Optional.ofNullable(eventRepository.findById(event_id));
             Event event = eventOptional.orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + event_id));
             System.out.println(event.getTitle());
             Survey savedSurvey = surveyRepository.save(requestDto.toEntity(event));
             Long new_id = savedSurvey.getId();
             Survey createdSurvey = surveyRepository.findById(new_id).orElseThrow();
-
-            // Debug: Print statements to check values
-            System.out.println("Created Survey: " + createdSurvey.getQuestion()+createdSurvey.getId()+createdSurvey.getEvent().getId());
-
             return SurveyCreateDto.fromEntity(createdSurvey);
         } catch (Exception e) {
             throw new IllegalArgumentException("설문 생성 실패");
