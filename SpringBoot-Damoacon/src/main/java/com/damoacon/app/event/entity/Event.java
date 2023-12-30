@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="event")
+@Table(name="events")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Event {
