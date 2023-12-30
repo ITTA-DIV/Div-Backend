@@ -58,6 +58,9 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
+           docker run -d --log-driver=syslog -p 8080:8080 \
+          -v /home/ubuntu/crawlingenv/bin:/app \
+          -v /home/ubuntu/crawlingenv/lib/python3.10/site-packages:/app \
+          ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
