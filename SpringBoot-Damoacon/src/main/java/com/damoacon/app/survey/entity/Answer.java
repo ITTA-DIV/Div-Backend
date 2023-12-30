@@ -21,7 +21,7 @@ public class Answer {
     @NotNull
     private int answer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
