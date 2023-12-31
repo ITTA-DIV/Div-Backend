@@ -62,6 +62,10 @@ def crawl_page(page):
     service = Service(executable_path='/home/ubuntu/chromedriver-linux64/chromedriver')
     chrome_options = Options()
     # chrome_options.add_argument("--headless")
+
+    # linux 환경에서 필요한 option
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     # 웹 페이지 로드
