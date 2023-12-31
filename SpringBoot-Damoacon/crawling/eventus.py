@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pymysql
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 import re
 from urllib.request import urlopen
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
@@ -58,9 +59,10 @@ def parse_date_data(date_data):
 def crawl_page(page):
     url = "https://event-us.kr/search?order=created&date=%EB%AA%A8%EB%93%A0%EB%82%A0&page="+page
 
+    service = Service(executable_path='/home/ubuntu/chromedriver-linux64/chromedriver')
     chrome_options = Options()
     # chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
     # 웹 페이지 로드
     driver.get(url)
