@@ -58,12 +58,9 @@ def parse_date_data(date_data):
 def crawl_page(page):
     url = "https://event-us.kr/search?order=created&date=%EB%AA%A8%EB%93%A0%EB%82%A0&page="+page
 
-    # 크롬 드라이버의 경로를 설정
-    chrome_driver_path = "/home/ubuntu/chromedriver-linux64/chromedriver"
-
     chrome_options = Options()
     # chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(executable_path=chrome_driver_path, options=chrome_options)
+    driver = webdriver.Chrome(options=chrome_options)
 
     # 웹 페이지 로드
     driver.get(url)
