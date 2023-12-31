@@ -48,7 +48,7 @@ public class Event {
     private String host;
 
     @Column(name = "host_profile")
-    @NotNull
+    // @NotNull
     private String hostProfile;
 
     @Column(name = "link")

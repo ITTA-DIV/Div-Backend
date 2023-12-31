@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import re
 from urllib.request import urlopen
+from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
 # 시작날짜, 끝나는 날짜 분리 함수
 def parse_date_data(date_data):
@@ -205,10 +206,10 @@ def crawl_page(page):
     return count, tuples
 
 def eventusCrawling():
-    host_name = ""
-    username = ""
-    password = ""
-    database_name = ""
+    host_name = DB_HOST
+    username = DB_USER
+    password = DB_PASSWORD
+    database_name = DB_NAME
     db = pymysql.connect(
         host=host_name,
         port=3306,
@@ -231,7 +232,7 @@ def eventusCrawling():
         n, result = crawl_page(page)
 
         print(result)
-        stmt = "INSERT IGNORE INTO `events` (title, startdate, enddate, price, location, address, host, link, applystart, applyend, type, category_id, thumbnail, is_permit) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        stmt = "INSERT IGNORE INTO `events` (title, start_date, end_date, price, location, address, host, link, apply_start_date, apply_end_date, type, category_id, thumbnail, is_permit) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(stmt, result)
         db.commit()
         print(n)

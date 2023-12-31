@@ -48,6 +48,28 @@ jobs:
         docker tag app ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
 
+    - name: Make config.py
+      run: |
+        cd ./SpringBoot-Damoacon/crawling && touch ./config.py && echo "${{ secrets.CRAWLING_CONFIG }}" > ./config.py
+
+    - name: Copy config.py to EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
+        username: ubuntu
+        key: ${{ secrets.PRIVATE_KEY }} # pem 키
+        source: './SpringBoot-Damoacon/crawling/config.py' # 로컬 파일 경로
+        target: '/home/ubuntu/crawling' # EC2에 복사될 경로
+
+    - name: Copy eventus.py to EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
+        username: ubuntu
+        key: ${{ secrets.PRIVATE_KEY }} # pem 키
+        source: './SpringBoot-Damoacon/crawling/eventus.py' # 로컬 파일 경로
+        target: '/home/ubuntu/crawling' # EC2에 복사될 경로
+
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
