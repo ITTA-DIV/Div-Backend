@@ -209,6 +209,9 @@ def crawl_page(page):
 #     cursor.executemany(stmt, tuples)
 #     db.commit()
 #     print()
+
+    driver.quit()
+
     return count, tuples
 
 def eventusCrawling():
@@ -247,6 +250,5 @@ def eventusCrawling():
             break
 
     db.close()
-    driver.quit()
 
 eventusCrawling()
