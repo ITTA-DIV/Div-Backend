@@ -61,7 +61,7 @@ def crawl_page(page):
 
     service = Service(executable_path='/home/ubuntu/chromedriver-linux64/chromedriver')
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
 
     # linux 환경에서 필요한 option
     chrome_options.add_argument('--no-sandbox')
