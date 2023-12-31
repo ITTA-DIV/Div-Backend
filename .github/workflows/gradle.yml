@@ -51,10 +51,10 @@ jobs:
     - name: Make config.py
       run: |
         cd ./SpringBoot-Damoacon/crawling && touch ./config.py &&
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> ./config.py &&
-        echo "DB_USER=${{ secrets.DB_USER }}" >> ./config.py && 
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> ./config.py &&
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> ./config.py
+        echo "DB_HOST=\"${{ secrets.DB_HOST }}\"" >> ./config.py &&
+        echo "DB_USER=\"${{ secrets.DB_USER }}\"" >> ./config.py &&
+        echo "DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\"" >> ./config.py &&
+        echo "DB_NAME=\"${{ secrets.DB_NAME }}\"" >> ./config.py
 
     - name: Remove existing config.py, eventus.py on EC2
       uses: appleboy/ssh-action@master
