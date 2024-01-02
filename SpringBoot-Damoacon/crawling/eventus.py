@@ -128,19 +128,26 @@ def crawl_page(page):
 
 #         print("startdate:", startdate)
 #         print("enddate:", enddate)
-        #  - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - -
+        #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         price=infoSection.dl.find_all('div')[2].dd.span.text
         price = price.replace(',', '')
 
-        mapSection=new_page_soup.find('section', {'id': 'mapSection'})
+        mapSection = new_page_soup.find('section', {'id': 'mapSection'})
 
-        location=mapSection.dl.find_all('div')[0].dd
-        if(location):
-            location=location.text.replace('\'', '')
-        else:
-            location=""
-#         print(location)
+        try:
+            location = mapSection.dl.find_all('div')[0].dd
+            if location:
+                location = location.text.replace('\'', '')
+            else:
+                location = ""
+        except IndexError:
+            # IndexError가 발생할 경우에 대한 처리
+            location = ""
+            print("IndexError: 'div' element not found in the list.")
+
+        # location을 사용 또는 출력
+        print(location)
 
 
         address=mapSection.dl.find_all('div')
@@ -236,7 +243,7 @@ def eventusCrawling():
     db.commit()
 
     for i in range (1, 79):
-        n=0
+        n=1
         page = str(i)
         n, result = crawl_page(page)
 
