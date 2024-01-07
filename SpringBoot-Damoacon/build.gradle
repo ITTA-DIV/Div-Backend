@@ -27,6 +27,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation'junit:junit:4.12'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.modelmapper:modelmapper:2.4.4'
 }
 
 jar {

@@ -188,6 +188,13 @@ def crawl_page(page):
         host=new_page_soup.find('div',{'class':'font-bold flex flex-col'}).text[1:]
 #         print(host)
 
+        host_profile=new_page_soup.find('img',{'class':'aspect-1 h-6 w-6 object-cover rounded-full border'})
+        if host_profile is not None:
+            host_profile=host_profile.get('src')
+        else: # 이미지가 없는 경우
+            host_profile=""
+#         print(host_profile)
+
         link=new_page_soup.find('form',{'class':'space-y-4'}).get('action')
         link="https://event-us.kr/"+link
 #         print(link)
@@ -208,14 +215,9 @@ def crawl_page(page):
 
         count+=1
 
-        tuple=(title,startdate,enddate,price,location,address,host,link,applystart,applyend,type,category_id,thumbnail,is_permit)
+        tuple=(title,startdate,enddate,price,location,address,host,host_profile,link,applystart,applyend,type,category_id,thumbnail,is_permit)
         tuples.append(tuple)
-#         print(tuples)
 
-#     stmt = "INSERT INTO `events`(title, startdate, enddate,  price, location, address, host, link, applystart, applyend, type, category_id, thumbnail, is_permit) VALUES  ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d') "
-#     cursor.executemany(stmt, tuples)
-#     db.commit()
-#     print()
 
     driver.quit()
 
@@ -248,7 +250,7 @@ def eventusCrawling():
         n, result = crawl_page(page)
 
         print(result)
-        stmt = "INSERT IGNORE INTO `events` (title, start_date, end_date, price, location, address, host, link, apply_start_date, apply_end_date, type, category_id, thumbnail, is_permit) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        stmt = "INSERT IGNORE INTO `events` (title, start_date, end_date, price, location, address, host,host_profile, link, apply_start_date, apply_end_date, type, category_id, thumbnail, is_permit) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(stmt, result)
         db.commit()
         print(n)
