@@ -18,19 +18,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OAuthServiceImpl implements OAuthService {
-    @Value("${sns.google.url}")
+    @Value("${google.login.url}")
     private String GOOGLE_BASE_URL;
 
-    @Value("${sns.google.client.id}")
+    @Value("${google.client.id}")
     private String GOOGLE_CLIENT_ID;
 
-    @Value("${sns.google.redirect.uri}")
+    @Value("${google.redirect.uri}")
     private String GOOGLE_REDIRECT_URI;
 
-    @Value("${sns.google.client.secret}")
+    @Value("${google.client.secret}")
     private String GOOGLE_CLIENT_SECRET;
 
-    @Value("${sns.google.token.url}")
+    @Value("${google.auth.url}")
     private String GOOGLE_TOKEN_BASE_URL;
 
     private final HttpServletResponse response;

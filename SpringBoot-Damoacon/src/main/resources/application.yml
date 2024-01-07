@@ -16,13 +16,13 @@ spring:
         format_sql: true
 
 # GOOGLE LOGIN SECURITY
-sns:
-  google:
+google:
+  auth:
+    url: ${GOOGLE_TOKEN_BASE_URL}
+  login:
     url: ${GOOGLE_URL}
-    client:
-      id: ${GOOGLE_CLIENT_ID}
-      secret: ${GOOGLE_CLIENT_SECRET}
-    redirect:
-      uri: ${GOOGLE_REDIRECT_URI}
-    token:
-      url: ${GOOGLE_TOKEN_BASE_URL}
+  client:
+    id: ${GOOGLE_CLIENT_ID}
+    secret: ${GOOGLE_CLIENT_SECRET}
+  redirect:
+    uri: ${GOOGLE_REDIRECT_URI}
