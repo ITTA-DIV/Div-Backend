@@ -54,30 +54,19 @@ public class EventServiceImpl implements EventService {
                     dto.setId(event.getId());
                     dto.setTitle(event.getTitle());
                     dto.setThumbnail(event.getThumbnail());
+                    dto.setHost(event.getHost());
                     dto.setHostProfile(event.getHostProfile());
-                    // Category가 null이 아니라면 categoryName 설정
-                    if (event.getCategory() != null) {
-                        dto.setCategory_name(event.getCategory().getCategory_name());
-                    }
-                    // applyEndDate와 현재 날짜를 비교하여 남은 날짜 계산
-                    if (event.getApplyEndDate() != null) {
-                        LocalDateTime currentDateTime = LocalDateTime.now();
-                        LocalDateTime applyEndDateTime = event.getApplyEndDate().toLocalDateTime();
-                        long remainingDays = ChronoUnit.DAYS.between(currentDateTime, applyEndDateTime);
-                        // 남은 날짜를 DTO에 설정
-                        dto.setRemainingDays((int) remainingDays);
-                    }
-                    if (event.getStartDate() != null) {
-                        // event의 startdate를 원하는 형식의 문자열로 변환하여 DTO에 설정
-                        Timestamp timestamp = event.getStartDate();
-                        // timestamp to localdatetime
-                        LocalDateTime localDateTime = timestamp.toLocalDateTime();
-                        String formattedDateTime = localDateTime.format(formatter);
-
-                        dto.setEventDateTimeString(formattedDateTime);
-                    }
-                    // event의 price가 무료이면 1, 아니면 0을 반환
-                    dto.setIsFree("무료".equals(event.getPrice()) ? 1 : 0);
+                    dto.setCategory_name(event.getCategory().getCategory_name());
+                    LocalDateTime currentDateTime = LocalDateTime.now();
+                    LocalDateTime applyEndDateTime = event.getApplyEndDate().toLocalDateTime();
+                    long remainingDays = ChronoUnit.DAYS.between(currentDateTime, applyEndDateTime);
+                    dto.setRemainingDays((int) remainingDays);
+                    // 날짜를 원하는 형식(MM월 dd일 (E))으로 변경
+                    Timestamp timestamp = event.getStartDate();
+                    LocalDateTime localDateTime = timestamp.toLocalDateTime();  // timestamp to localdatetime
+                    String formattedDateTime = localDateTime.format(formatter);
+                    dto.setEventDateTimeString(formattedDateTime);
+                    dto.setIsFree("무료".equals(event.getPrice()) ? 1 : 0);   // event의 price가 무료이면 1, 아니면 0을 반환
 
                     return dto;
                 })
