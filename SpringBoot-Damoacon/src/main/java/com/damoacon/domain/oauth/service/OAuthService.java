@@ -1,16 +1,28 @@
 package com.damoacon.domain.oauth.service;
 
+import com.damoacon.domain.oauth.dto.GoogleLoginResponse;
+import com.damoacon.domain.oauth.dto.GoogleUserInformation;
+import com.damoacon.domain.oauth.dto.GoogleUserResponse;
+
 public interface OAuthService {
-    /**
-     * 각 Social Login 페이지로 Redirect 처리할 URL Build
-     * 사용자로부터 로그인 요청을 받아 Social Login Server 인증용 code 요청
-     */
     void getOAuthRedirectURL();
 
     /**
-     * API Server로부터 받은 code를 활용하여 사용자 인증 정보 요청
-     * @param code API Server 에서 받아온 code
-     * @return API 서버로 부터 응답받은 Json 형태의 결과를 string으로 반
+     * Google API Server로부터 받은 code를 활용하여 사용자 인증 정보 요청
+     * @param code Google API Server 에서 받아온 code
+     * @return Google API 서버로 부터 응답받은 Json 형태의 결과를 string으로 반
      */
-    String requestAccessToken(String code);
+    GoogleLoginResponse requestAccessToken(String code);
+
+    /**
+     * @param id_token Google API Server에서 받아온 id_token으로
+     * @return Google API 서버로부터 응답받은 Json 형태의 결과를 GoogleUserResponse로 반환
+     */
+    GoogleUserInformation getUserInformation(String id_token);
+
+    /**
+     * @param googleUserInformation Google API Server에서 받아온 User 정보를 파라미터로 받아 이미 있는 유저인지 확인하고,
+     * @return 없으면 새로운 유저 생성하여 유저정보 반환, 있으면 생성하지 않고 유저정보 반환
+     */
+    GoogleUserResponse checkIsUserAndRegister(GoogleUserInformation googleUserInformation);
 }

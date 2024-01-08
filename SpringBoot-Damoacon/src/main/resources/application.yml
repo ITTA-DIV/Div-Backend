@@ -19,6 +19,7 @@ spring:
 google:
   auth:
     url: ${GOOGLE_TOKEN_BASE_URL}
+    scope: ${GOOGLE_OAUTH_SCOPE}
   login:
     url: ${GOOGLE_URL}
   client:

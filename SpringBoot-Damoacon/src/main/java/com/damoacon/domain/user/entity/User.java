@@ -1,5 +1,6 @@
 package com.damoacon.domain.user.entity;
 
+import com.damoacon.domain.model.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,15 +30,15 @@ public class User {
     @Column(nullable = true, name = "nickname")
     private String nickname;
 
-    @Column(nullable = false, name = "isManager")
-    private Integer isManager;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Builder
-    public User (String username,String profile, String email, String nickname, Integer isManager) {
+    public User (String username, String profile, String email) {
         this.username = username;
         this.profile = profile;
         this.email = email;
-        this.nickname = nickname;
-        this.isManager = isManager;
+        this.role = Role.USER;
     }
 }
