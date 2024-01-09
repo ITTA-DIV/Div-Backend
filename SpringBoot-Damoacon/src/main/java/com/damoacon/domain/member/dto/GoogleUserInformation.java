@@ -1,4 +1,4 @@
-package com.damoacon.domain.oauth.dto;
+package com.damoacon.domain.member.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

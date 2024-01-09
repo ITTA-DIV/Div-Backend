@@ -1,10 +1,11 @@
-package com.damoacon.domain.oauth.service;
+package com.damoacon.domain.member.service;
 
-import com.damoacon.domain.oauth.dto.GoogleLoginResponse;
-import com.damoacon.domain.oauth.dto.GoogleUserInformation;
-import com.damoacon.domain.oauth.dto.GoogleUserResponse;
+import com.damoacon.domain.member.dto.GoogleLoginResponse;
+import com.damoacon.domain.member.dto.GoogleUserInformation;
+import com.damoacon.domain.member.dto.LoginResponseDto;
+import com.damoacon.global.common.ApiDataResponseDto;
 
-public interface OAuthService {
+public interface MemberService {
     void getOAuthRedirectURL();
 
     /**
@@ -24,5 +25,5 @@ public interface OAuthService {
      * @param googleUserInformation Google API Server에서 받아온 User 정보를 파라미터로 받아 이미 있는 유저인지 확인하고,
      * @return 없으면 새로운 유저 생성하여 유저정보 반환, 있으면 생성하지 않고 유저정보 반환
      */
-    GoogleUserResponse checkIsUserAndRegister(GoogleUserInformation googleUserInformation);
+    ApiDataResponseDto<LoginResponseDto> checkIsUserAndRegister(GoogleUserInformation googleUserInformation);
 }

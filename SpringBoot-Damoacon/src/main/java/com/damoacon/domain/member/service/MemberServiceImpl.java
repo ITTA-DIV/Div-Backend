@@ -1,10 +1,12 @@
-package com.damoacon.domain.oauth.service;
+package com.damoacon.domain.member.service;
 
-import com.damoacon.domain.oauth.dto.GoogleLoginResponse;
-import com.damoacon.domain.oauth.dto.GoogleUserInformation;
-import com.damoacon.domain.oauth.dto.GoogleUserResponse;
-import com.damoacon.domain.user.entity.User;
-import com.damoacon.domain.user.repository.UserRepository;
+import com.damoacon.domain.member.entity.Member;
+import com.damoacon.domain.member.dto.GoogleLoginResponse;
+import com.damoacon.domain.member.dto.GoogleUserInformation;
+import com.damoacon.domain.member.dto.LoginResponseDto;
+import com.damoacon.domain.member.repository.MemberRepository;
+import com.damoacon.global.common.ApiDataResponseDto;
+import com.damoacon.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +17,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthServiceImpl implements OAuthService {
+public class MemberServiceImpl implements MemberService {
     @Value(value = "${google.login.url}")
     private String GOOGLE_BASE_URL;
 
@@ -36,12 +39,17 @@ public class OAuthServiceImpl implements OAuthService {
     private String GOOGLE_TOKEN_BASE_URL;
 
     @Value("${google.auth.scope}")
-    private String scopes;
+    private String GOOGLE_AUTH_SCOPES;
 
     private final HttpServletResponse response;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
 
-    private final UserRepository userRepository;
-
+    /**
+     *
+     * @param code Google API Server 에서 받아온 code
+     * @return 를 바탕으로 유저정보를 요청할 수 있는 GoogleLoginResponse를 반환
+     */
     @Override
     public GoogleLoginResponse requestAccessToken(String code) {
         try {
@@ -63,6 +71,9 @@ public class OAuthServiceImpl implements OAuthService {
         }
     }
 
+    /**
+     * redirect를 통해 Google API Server에서 code를 반환받는다.
+     */
     @Override
     public void getOAuthRedirectURL() {
         Map<String, Object> params = new HashMap<>();
@@ -84,6 +95,7 @@ public class OAuthServiceImpl implements OAuthService {
         }
     }
 
+    //
     @Override
     public GoogleUserInformation getUserInformation(String id_token) {
         RestTemplate restTemplate = new RestTemplate();
@@ -97,31 +109,27 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public GoogleUserResponse checkIsUserAndRegister(GoogleUserInformation googleUserInformation) {
-        GoogleUserResponse googleUserResponse = GoogleUserResponse.builder()
-                .email(googleUserInformation.getEmail())
-                .name(googleUserInformation.getName())
-                .picture(googleUserInformation.getPicture())
-                .build();
-
-        // User에 email 정보가 이미 존재하면, 그냥 GoogleUserResponse 반환
-        if(userRepository.findOneByEmail(googleUserInformation.getEmail()).isPresent()) {
-            return googleUserResponse;
+    public ApiDataResponseDto<LoginResponseDto> checkIsUserAndRegister(GoogleUserInformation googleUserInformation) {
+        // User에 email 정보가 이미 존재하면, ApiDataResponseDto<LoginResponseDto> 반환
+        Optional<Member> optionalMember = memberRepository.findOneByEmail(googleUserInformation.getEmail());
+        if(optionalMember.isPresent()) {
+            return ApiDataResponseDto.of(jwtUtil.generateTokens(optionalMember.get()));
         } else {    // User에 email 정보가 없으면 새로운 유저 저장
-            User user = User.builder()
-                    .email(googleUserResponse.getEmail())
-                    .username(googleUserResponse.getName())
-                    .profile(googleUserResponse.getPicture())
+            Member member = Member.builder()
+                    .email(googleUserInformation.getEmail())
+                    .username(googleUserInformation.getName())
+                    .profile(googleUserInformation.getPicture())
                     .build();
 
-            userRepository.save(user);
+            memberRepository.save(member);
 
-            return googleUserResponse;
+            //  토큰 발급
+            return ApiDataResponseDto.of(jwtUtil.generateTokens(member));
         }
     }
 
     // scope의 값을 보내기 위해 띄어쓰기 값을 UTF-8로 변환하는 로직 포함
-    public String getScopeUrl() {
-        return scopes.replaceAll(",", "%20");
+    private String getScopeUrl() {
+        return GOOGLE_AUTH_SCOPES.replaceAll(",", "%20");
     }
 }

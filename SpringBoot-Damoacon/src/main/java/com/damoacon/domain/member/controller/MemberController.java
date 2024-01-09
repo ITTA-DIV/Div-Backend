@@ -1,8 +1,9 @@
-package com.damoacon.domain.oauth.controller;
+package com.damoacon.domain.member.controller;
 
-import com.damoacon.domain.oauth.dto.GoogleUserInformation;
-import com.damoacon.domain.oauth.dto.GoogleUserResponse;
-import com.damoacon.domain.oauth.service.OAuthService;
+import com.damoacon.domain.member.dto.GoogleUserInformation;
+import com.damoacon.domain.member.dto.LoginResponseDto;
+import com.damoacon.domain.member.service.MemberService;
+import com.damoacon.global.common.ApiDataResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/oauth2")
 @Slf4j
-public class OAuthController {
-    private final OAuthService oAuthService;
+public class MemberController {
+    private final MemberService memberService;
 
     @GetMapping(value = "/google")
     public void googleLoginRedirect() {
         log.info(">> 사용자로부터 Google 로그인 요청을 받음 :: {} Google Login");
-        oAuthService.getOAuthRedirectURL();
+        memberService.getOAuthRedirectURL();
     }
 
     /**
@@ -27,11 +28,11 @@ public class OAuthController {
      * @return SNS Login 요청 결과로 받은 Json 형태의 String 문자열 (access_token, refresh_token 등)
      */
     @GetMapping(value = "/google/callback")
-    public GoogleUserResponse callback(@RequestParam(name = "code") String code) {
+    public ApiDataResponseDto<LoginResponseDto> callback(@RequestParam(name = "code") String code) {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
-        String idToken = oAuthService.requestAccessToken(code).getId_token();
-        GoogleUserInformation googleUserResponse = oAuthService.getUserInformation(idToken);
+        String idToken = memberService.requestAccessToken(code).getId_token();
+        GoogleUserInformation googleUserResponse = memberService.getUserInformation(idToken);
 
-        return oAuthService.checkIsUserAndRegister(googleUserResponse);
+        return memberService.checkIsUserAndRegister(googleUserResponse);
     }
 }

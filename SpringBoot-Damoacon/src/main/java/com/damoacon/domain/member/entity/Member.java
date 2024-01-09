@@ -1,4 +1,4 @@
-package com.damoacon.domain.user.entity;
+package com.damoacon.domain.member.entity;
 
 import com.damoacon.domain.model.Role;
 import jakarta.persistence.Entity;
@@ -9,13 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="User")
+@Table(name="Member")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "user_id")
+    @Column(nullable = false, name = "member_id")
     private Long id;
 
     @Column(nullable = false, name = "username")
@@ -35,7 +35,7 @@ public class User {
     private Role role;
 
     @Builder
-    public User (String username, String profile, String email) {
+    public Member(String username, String profile, String email) {
         this.username = username;
         this.profile = profile;
         this.email = email;
