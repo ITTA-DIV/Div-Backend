@@ -196,7 +196,7 @@ def crawl_page(page):
 #         print(host_profile)
 
         link=new_page_soup.find('form',{'class':'space-y-4'}).get('action')
-        link="https://event-us.kr/"+link
+        link="https://event-us.kr"+link
 #         print(link)
 
         applydate=infoSection.dl.find_all('div')[0].dd.span.text[1:]
@@ -249,13 +249,13 @@ def eventusCrawling():
         page = str(i)
         n, result = crawl_page(page)
 
-        print(result)
+#         print(result)
         stmt = "INSERT IGNORE INTO `events` (title, start_date, end_date, price, location, address, host,host_profile, link, apply_start_date, apply_end_date, type, category_id, thumbnail, is_permit) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(stmt, result)
         db.commit()
-        print(n)
-        print(cursor.rowcount)
-        if cursor.rowcount != n:
+#         print(n)
+#         print(cursor.rowcount)
+        if cursor.rowcount+2 < n:
             break
 
     db.close()
