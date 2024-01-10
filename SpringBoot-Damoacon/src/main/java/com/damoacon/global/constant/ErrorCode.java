@@ -18,12 +18,13 @@ public enum ErrorCode {
     VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
     NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
     INVALID_TOKEN(10004, HttpStatus.UNAUTHORIZED, "Invalid token."),
-    ACCESS_TOKEN_REQUIRED(10003, HttpStatus.UNAUTHORIZED, "Access Token required."),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
 
-    UNAUTHORIZED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized");
+    UNAUTHORIZED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized"),
+    ACCESS_TOKEN_EXPIRED(40002, HttpStatus.UNAUTHORIZED, "Access Token expired."),
+    ACCESS_TOKEN_REQUIRED(40001, HttpStatus.UNAUTHORIZED, "Access Token required.");
 
     private final Integer code;
     private final HttpStatus httpStatus;

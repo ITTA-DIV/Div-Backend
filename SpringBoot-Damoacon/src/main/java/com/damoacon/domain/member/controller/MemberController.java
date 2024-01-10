@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/oauth2")
+@RequestMapping(value = "/api/v1/member/login/oauth")
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
@@ -19,6 +19,7 @@ public class MemberController {
     @GetMapping(value = "/google")
     public void googleLoginRedirect() {
         log.info(">> 사용자로부터 Google 로그인 요청을 받음 :: {} Google Login");
+
         memberService.getOAuthRedirectURL();
     }
 
