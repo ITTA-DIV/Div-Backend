@@ -35,13 +35,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         final String LOGIN_API_URL = "/api/v1/member/login/oauth/google";
         final String LOGIN_CALLBACK_URL = "/api/v1/member/login/oauth/google/callback";
         final String TOKEN_REFRESH_API_URL = "/api/v1/member/refresh";
+        final String LOGIN_CALLBACK_FAVICON_URL = "/favicon.ico";   // 정적 자원 요청 무시
+        final String MAIN_EVENT_URL = "/api/v1/event";  // 메인 이벤트 리스트 get
 
         /**
          * 로그인 uri와 로그인 redirection uri는 필터를 무시하고 다음 필터로 이동
          * uri 검사하여 jwt 검증 필터 통과 여부 결정
          */
         String uri = request.getRequestURI();
-        if(uri.equals(LOGIN_API_URL) || uri.equals(LOGIN_CALLBACK_URL)) {
+        if(uri.equals(LOGIN_API_URL) || uri.equals(LOGIN_CALLBACK_URL) || uri.equals(LOGIN_CALLBACK_FAVICON_URL) || uri.equals(MAIN_EVENT_URL)) {
             filterChain.doFilter(request, response);
             return;
         }

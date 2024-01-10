@@ -3,7 +3,9 @@ package com.damoacon.domain.member.service;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.dto.LoginResponseDto;
+import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.global.common.ApiDataResponseDto;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface MemberService {
     void getOAuthRedirectURL();
@@ -26,4 +28,6 @@ public interface MemberService {
      * @return 없으면 새로운 유저 생성하여 유저정보 반환, 있으면 생성하지 않고 유저정보 반환
      */
     ApiDataResponseDto<LoginResponseDto> checkIsUserAndRegister(GoogleUserInformation googleUserInformation);
+
+    MemberResponseDto getMember(@PathVariable Long id);
 }

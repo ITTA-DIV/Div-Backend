@@ -1,11 +1,14 @@
 package com.damoacon.domain.member.service;
 
+import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.repository.MemberRepository;
 import com.damoacon.global.common.ApiDataResponseDto;
+import com.damoacon.global.common.ApiResponseDto;
+import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -125,6 +128,28 @@ public class MemberServiceImpl implements MemberService {
 
             //  토큰 발급
             return ApiDataResponseDto.of(jwtUtil.generateTokens(member));
+        }
+    }
+
+    public MemberResponseDto getMember(Long id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+
+            MemberResponseDto memberResponseDto = MemberResponseDto.builder()
+                    .id(member.getId())
+                    .username(member.getUsername())
+                    .profile(member.getProfile())
+                    .email(member.getEmail())
+                    .nickname(member.getNickname())
+                    .build();
+
+            return memberResponseDto;
+        } else {
+            // Optional이 비어있을 경우에 대한 처리
+            // 예를 들어, 해당 ID에 대한 회원이 존재하지 않는 경우
+            return null; // 또는 원하는 방식으로 처리
         }
     }
 
