@@ -136,9 +136,9 @@ def crawl_page(page):
         mapSection = new_page_soup.find('section', {'id': 'mapSection'})
 
         try:
-            location = mapSection.dl.find_all('div')[0].dd
+            location=mapSection.dl.find_all('div')
             if location:
-                location = location.text.replace('\'', '')
+                location=location[0].dd.text.replace('\'', '')
             else:
                 location = ""
         except IndexError:
