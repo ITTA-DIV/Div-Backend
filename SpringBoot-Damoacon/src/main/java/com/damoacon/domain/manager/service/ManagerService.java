@@ -63,4 +63,15 @@ public class ManagerService {
                 .map(EventResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public EventResponseDto eventApplyPermit(Long event_id){
+        Optional<Event> optionalEvent = eventRepository.findById(event_id);
+
+        Event event = optionalEvent.get();
+        event.setIs_permit(1);
+
+        Event updatedEvent = eventRepository.save(event);
+
+        return EventResponseDto.fromEntity(updatedEvent);
+    }
 }
