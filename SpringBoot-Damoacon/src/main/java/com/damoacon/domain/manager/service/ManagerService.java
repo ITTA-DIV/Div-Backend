@@ -6,14 +6,17 @@ import com.damoacon.domain.event.repository.CategoryRepository;
 import com.damoacon.domain.event.repository.EventRepository;
 import com.damoacon.domain.manager.dto.EventCreateDto;
 import com.damoacon.domain.manager.dto.EventResponseDto;
+import com.damoacon.domain.manager.repository.EventManagerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,6 +25,7 @@ public class ManagerService {
 
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
+    private final EventManagerRepository eventManagerRepository;
 
     public EventResponseDto eventCreate(EventCreateDto requestDto){
         try {
@@ -53,5 +57,10 @@ public class ManagerService {
             throw new IllegalArgumentException("이벤트 생성 실패");
         }
     }
-
+    public List<EventResponseDto> eventApplyList(){
+        List<Event> unpermittedEvents = eventManagerRepository.findNotPermit();
+        return unpermittedEvents.stream()
+                .map(EventResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

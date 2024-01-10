@@ -7,10 +7,9 @@ import com.damoacon.domain.manager.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,4 +26,13 @@ public class ManagerController {
             return ResponseEntity.badRequest().body(ResponseDto.response(HttpStatus.BAD_REQUEST, "이벤트 신청 생성 실패"));
         }
     }
+    @GetMapping
+    public ResponseEntity<ResponseDto<Object>> applyList(){
+        try {
+            return ResponseEntity.ok().body(ResponseDto.response(HttpStatus.CREATED, "이벤트 신청 목록 조회 성공",managerService.eventApplyList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseDto.response(HttpStatus.BAD_REQUEST, "이벤트 신청 목록 조회 실패"));
+        }
+    }
+회
 }
