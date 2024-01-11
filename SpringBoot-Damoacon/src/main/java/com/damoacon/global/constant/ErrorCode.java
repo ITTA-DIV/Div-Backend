@@ -19,7 +19,7 @@ public enum ErrorCode {
     VALIDATION_ERROR(10002, HttpStatus.BAD_REQUEST, "Validation error"),
     NOT_FOUND(10003, HttpStatus.NOT_FOUND, "Requested resource is not found"),
 
-    INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
+    INTERNAL_SERVER_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
 
     AUTHENTICATION_FAILED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized"),
@@ -57,7 +57,7 @@ public enum ErrorCode {
                     if (httpStatus.is4xxClientError()) {
                         return ErrorCode.BAD_REQUEST;
                     } else if (httpStatus.is5xxServerError()) {
-                        return ErrorCode.INTERNAL_ERROR;
+                        return ErrorCode.INTERNAL_SERVER_ERROR;
                     } else {
                         return ErrorCode.OK;
                     }
