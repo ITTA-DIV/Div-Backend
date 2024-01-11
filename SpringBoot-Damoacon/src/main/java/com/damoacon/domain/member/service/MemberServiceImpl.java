@@ -4,12 +4,9 @@ import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
-import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.repository.MemberRepository;
-import com.damoacon.global.common.ApiDataResponseDto;
-import com.damoacon.global.common.ApiResponseDto;
-import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.util.JwtUtil;
+import com.damoacon.global.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
     private final HttpServletResponse response;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final ResponseUtil responseUtil;
 
     /**
      *
@@ -112,22 +110,27 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ApiDataResponseDto<LoginResponseDto> checkIsUserAndRegister(GoogleUserInformation googleUserInformation) {
+    public void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation) {
         // User에 email 정보가 이미 존재하면, ApiDataResponseDto<LoginResponseDto> 반환
         Optional<Member> optionalMember = memberRepository.findOneByEmail(googleUserInformation.getEmail());
-        if(optionalMember.isPresent()) {
-            return ApiDataResponseDto.of(jwtUtil.generateTokens(optionalMember.get()));
-        } else {    // User에 email 정보가 없으면 새로운 유저 저장
-            Member member = Member.builder()
-                    .email(googleUserInformation.getEmail())
-                    .username(googleUserInformation.getName())
-                    .profile(googleUserInformation.getPicture())
-                    .build();
+        try {
+            if(optionalMember.isPresent()) {
+                responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(optionalMember.get()));
+            } else {    // User에 email 정보가 없으면 새로운 유저 저장
+                Member member = Member.builder()
+                        .email(googleUserInformation.getEmail())
+                        .username(googleUserInformation.getName())
+                        .profile(googleUserInformation.getPicture())
+                        .build();
 
-            memberRepository.save(member);
+                memberRepository.save(member);
 
-            //  토큰 발급
-            return ApiDataResponseDto.of(jwtUtil.generateTokens(member));
+                //  토큰 발급
+                responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

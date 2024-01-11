@@ -2,7 +2,6 @@ package com.damoacon.global.util;
 
 import com.damoacon.global.common.ApiDataResponseDto;
 import com.damoacon.global.common.ApiResponseDto;
-import com.damoacon.global.constant.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

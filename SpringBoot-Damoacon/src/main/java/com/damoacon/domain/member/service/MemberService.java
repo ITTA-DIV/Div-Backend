@@ -5,6 +5,7 @@ import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.global.common.ApiDataResponseDto;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 
 public interface MemberService {
@@ -27,7 +28,7 @@ public interface MemberService {
      * @param googleUserInformation Google API Server에서 받아온 User 정보를 파라미터로 받아 이미 있는 유저인지 확인하고,
      * @return 없으면 새로운 유저 생성하여 유저정보 반환, 있으면 생성하지 않고 유저정보 반환
      */
-    ApiDataResponseDto<LoginResponseDto> checkIsUserAndRegister(GoogleUserInformation googleUserInformation);
+    void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation);
 
     MemberResponseDto getMember(@PathVariable Long id);
 }

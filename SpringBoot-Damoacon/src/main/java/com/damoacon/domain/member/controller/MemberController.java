@@ -1,11 +1,12 @@
 package com.damoacon.domain.member.controller;
 
 import com.damoacon.domain.member.dto.GoogleUserInformation;
-import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.service.MemberService;
 import com.damoacon.domain.model.ContextUser;
 import com.damoacon.global.common.ApiDataResponseDto;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,12 +33,12 @@ public class MemberController {
      * @return SNS Login 요청 결과로 받은 Json 형태의 String 문자열 (access_token, refresh_token 등)
      */
     @GetMapping(value = "/login/oauth/google/callback")
-    public ApiDataResponseDto<LoginResponseDto> callback(@RequestParam(name = "code") String code) {
+    public void callback(@RequestParam(name = "code") String code, @NotNull HttpServletResponse response) {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
         String idToken = memberService.requestAccessToken(code).getId_token();
         GoogleUserInformation googleUserResponse = memberService.getUserInformation(idToken);
 
-        return memberService.checkIsUserAndRegister(googleUserResponse);
+        memberService.checkIsUserAndRegister(response, googleUserResponse);
     }
 
     @GetMapping
