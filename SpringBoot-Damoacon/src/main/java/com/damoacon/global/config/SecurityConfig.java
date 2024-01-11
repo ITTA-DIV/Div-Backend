@@ -1,5 +1,6 @@
 package com.damoacon.global.config;
 
+import com.damoacon.global.handler.ExceptionHandlerFilter;
 import com.damoacon.global.util.JwtUtil;
 import com.damoacon.global.util.ResponseUtil;
 import com.damoacon.global.util.filter.JwtAuthenticationProcessingFilter;
@@ -36,14 +37,15 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/")
                         , new AntPathRequestMatcher("/css/**")
                         , new AntPathRequestMatcher("/images/**")
-                        , new AntPathRequestMatcher("/favicon.ico")
                         ).permitAll()
                         .requestMatchers("/api/v1/member/login/oauth/google/**").permitAll()
                         .requestMatchers("/api/v1/member/login/oauth/google/callback").permitAll()
+                        .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/v1/event").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class);
+                .addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(responseUtil), JwtAuthenticationProcessingFilter.class);
 
         return httpSecurity.build();
     }
