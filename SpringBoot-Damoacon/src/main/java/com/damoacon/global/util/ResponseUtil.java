@@ -17,8 +17,8 @@ import java.io.IOException;
 public class ResponseUtil {
     private final ObjectMapper mapper;
 
-    public void setResponse(HttpServletResponse response, ErrorCode code, int status) throws IOException {
-        ApiResponseDto dto = ApiResponseDto.of(true, code);
+    public void setResponse(HttpServletResponse response, int status, String message) throws IOException {
+        ApiResponseDto dto = ApiResponseDto.of(status, message);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
