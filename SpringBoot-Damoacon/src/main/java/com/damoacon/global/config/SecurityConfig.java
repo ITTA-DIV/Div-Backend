@@ -1,6 +1,7 @@
 package com.damoacon.global.config;
 
 import com.damoacon.global.util.JwtUtil;
+import com.damoacon.global.util.ResponseUtil;
 import com.damoacon.global.util.filter.JwtAuthenticationProcessingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.CorsUtils;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
+    private final ResponseUtil responseUtil;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -53,6 +55,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        return new JwtAuthenticationProcessingFilter(jwtUtil);
+        return new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil);
     }
 }

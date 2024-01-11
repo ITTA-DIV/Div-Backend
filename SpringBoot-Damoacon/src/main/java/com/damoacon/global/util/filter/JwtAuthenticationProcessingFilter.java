@@ -3,9 +3,9 @@ package com.damoacon.global.util.filter;
 import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.global.common.ApiDataResponseDto;
 import com.damoacon.global.exception.GeneralException;
 import com.damoacon.global.util.JwtUtil;
+import com.damoacon.global.util.ResponseUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +28,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final ResponseUtil responseUtil;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
@@ -56,7 +57,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             Member member = jwtUtil.validateToken(refresh_token);
             LoginResponseDto dto = jwtUtil.generateTokens(member);
 
-            ApiDataResponseDto.of(dto);
+            responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, dto);
 
             return;
         }
