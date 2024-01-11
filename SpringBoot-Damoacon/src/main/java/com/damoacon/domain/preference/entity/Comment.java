@@ -1,7 +1,7 @@
 package com.damoacon.domain.preference.entity;
 
 import com.damoacon.domain.event.entity.Event;
-import com.damoacon.domain.user.entity.User;
+import com.damoacon.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,16 +23,16 @@ public class Comment {
     private Event event;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(nullable = false, name = "content")
     private String content;
 
     @Builder
-    public Comment (Event event, User user, String content) {
+    public Comment (Event event, Member member, String content) {
         this.event = event;
-        this.user = user;
+        this.member = member;
         this.content = content;
     }
 
