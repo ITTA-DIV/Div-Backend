@@ -27,7 +27,7 @@ public enum ErrorCode {
     ACCESS_TOKEN_REQUIRED(40002, HttpStatus.UNAUTHORIZED, "Access Token required."),
     REFRESH_TOKEN_REQUIRED(40003, HttpStatus.UNAUTHORIZED, "Refresh Token required."),
     INVALID_TOKEN(40004, HttpStatus.UNAUTHORIZED, "Invalid token."),
-    ACCESS_TOKEN_EXPIRED(40004, HttpStatus.UNAUTHORIZED, "Access Token expired."),
+    EXPIRED_JWT(40004, HttpStatus.UNAUTHORIZED, "Token expired."),
     LOGIN_REQUIRED(40005, HttpStatus.FORBIDDEN, "Login required.");
 
     private final Integer code;
