@@ -35,16 +35,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequests -> httpRequests
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/")
-                        , new AntPathRequestMatcher("/css/**")
-                        , new AntPathRequestMatcher("/images/**")
+                                , new AntPathRequestMatcher("/css/**")
+                                , new AntPathRequestMatcher("/images/**")
                         ).permitAll()
-                        .requestMatchers("/api/v1/member/login/oauth/google/**").permitAll()
-                        .requestMatchers("/api/v1/member/login/oauth/google/callback").permitAll()
-                        .requestMatchers("/favicon.ico").permitAll()
-                        .requestMatchers("/api/v1/event").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class)
+                .addFilterAfter(new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil), LogoutFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(responseUtil), JwtAuthenticationProcessingFilter.class);
 
         return httpSecurity.build();
@@ -52,11 +48,10 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer configure() {
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
-    @Bean
-    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        return new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil);
+        return (web) -> web.ignoring()
+                .requestMatchers("/api/v1/member/login/oauth/google")
+                .requestMatchers("/api/v1/member/login/oauth/google/callback")
+                .requestMatchers("/api/v1/event")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
