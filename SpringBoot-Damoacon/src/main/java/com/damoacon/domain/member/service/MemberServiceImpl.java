@@ -5,9 +5,13 @@ import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.repository.MemberRepository;
+import com.damoacon.global.constant.ErrorCode;
+import com.damoacon.global.exception.GeneralException;
 import com.damoacon.global.util.JwtUtil;
 import com.damoacon.global.util.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -98,42 +102,40 @@ public class MemberServiceImpl implements MemberService {
 
     //
     @Override
-    public GoogleUserInformation getUserInformation(String id_token) {
+    public GoogleUserInformation getUserInformation(HttpServletRequest request) {
         RestTemplate restTemplate = new RestTemplate();
-        String requestUrl = UriComponentsBuilder.fromHttpUrl(GOOGLE_TOKEN_BASE_URL + "/tokeninfo").queryParam("id_token", id_token).toUriString();
 
-        GoogleUserInformation googleUserInformation = restTemplate.getForObject(requestUrl, GoogleUserInformation.class);
+        String idToken = request.getHeader("id-token");
 
-        System.out.println(googleUserInformation.toString());
+        if(idToken == null)
+            throw new GeneralException(ErrorCode.ID_TOKEN_REQUIRED);
 
-        return googleUserInformation;
-    }
-
-    @Override
-    public void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation) {
-        // User에 email 정보가 이미 존재하면, ApiDataResponseDto<LoginResponseDto> 반환
-        Optional<Member> optionalMember = memberRepository.findOneByEmail(googleUserInformation.getEmail());
         try {
-            if(optionalMember.isPresent()) {
-                responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(optionalMember.get()));
-            } else {    // User에 email 정보가 없으면 새로운 유저 저장
-                Member member = Member.builder()
-                        .email(googleUserInformation.getEmail())
-                        .username(googleUserInformation.getName())
-                        .profile(googleUserInformation.getPicture())
-                        .build();
+            String requestUrl = UriComponentsBuilder.fromHttpUrl(GOOGLE_TOKEN_BASE_URL + "/tokeninfo").queryParam("id_token", idToken).toUriString();
 
-                memberRepository.save(member);
-
-                //  토큰 발급
-                responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return restTemplate.getForObject(requestUrl, GoogleUserInformation.class);
+        } catch (SecurityException e) {
+            throw new GeneralException(ErrorCode.INVALID_ID_TOKEN);
         }
     }
 
+    @Override
+    @Transactional
+    public void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation) throws IOException {
+        Member member = memberRepository.findOneByEmail(googleUserInformation.getEmail())
+                .orElseGet(() -> Member.builder()
+                        .email(googleUserInformation.getEmail())
+                        .username(googleUserInformation.getName())
+                        .profile(googleUserInformation.getPicture())
+                        .build());
+
+        // 생성한 Member 객체를 저장
+        memberRepository.save(member);
+
+        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
+    }
+
+    @Transactional(readOnly = true)
     public MemberResponseDto getMember(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
 
@@ -150,9 +152,7 @@ public class MemberServiceImpl implements MemberService {
 
             return memberResponseDto;
         } else {
-            // Optional이 비어있을 경우에 대한 처리
-            // 예를 들어, 해당 ID에 대한 회원이 존재하지 않는 경우
-            return null; // 또는 원하는 방식으로 처리
+            throw new IllegalArgumentException("해당 id에 해당하는 멤버가 없습니다. id = " + id);
         }
     }
 
