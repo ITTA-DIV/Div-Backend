@@ -122,17 +122,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation) throws IOException {
-        Member member = memberRepository.findOneByEmail(googleUserInformation.getEmail())
-                .orElseGet(() -> Member.builder()
-                        .email(googleUserInformation.getEmail())
-                        .username(googleUserInformation.getName())
-                        .profile(googleUserInformation.getPicture())
-                        .build());
+        Member requestMember = Member.builder()
+                .email(googleUserInformation.getEmail())
+                .username(googleUserInformation.getName())
+                .profile(googleUserInformation.getPicture())
+                .build();
 
-        // 생성한 Member 객체를 저장
-        memberRepository.save(member);
+        memberRepository.findOneByEmail(requestMember.getEmail())
+                .orElseGet(() -> {
+                    memberRepository.save(requestMember);
+                    return requestMember;
+                });
 
-        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
+        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(requestMember));
     }
 
     @Transactional(readOnly = true)
