@@ -27,4 +27,5 @@ public class EventControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
 }
