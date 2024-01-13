@@ -1,7 +1,7 @@
 package com.damoacon.domain.preference.entity;
 
 import com.damoacon.domain.event.entity.Event;
-import com.damoacon.domain.user.entity.User;
+import com.damoacon.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,16 +19,16 @@ public class Heart {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
 
     @Builder
-    public Heart(User user, Event event) {
+    public Heart(Member member, Event event) {
         this.event = event;
-        this.user = user;
+        this.member = member;
     }
 }
