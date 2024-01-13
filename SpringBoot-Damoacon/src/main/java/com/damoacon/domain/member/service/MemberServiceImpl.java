@@ -105,13 +105,14 @@ public class MemberServiceImpl implements MemberService {
     public GoogleUserInformation getUserInformation(HttpServletRequest request) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String idToken = request.getHeader("id-token");
+        String code = request.getHeader("code");
 
-        if(idToken == null)
+        if(code == null)
             throw new GeneralException(ErrorCode.ID_TOKEN_REQUIRED);
 
         try {
-            String requestUrl = UriComponentsBuilder.fromHttpUrl(GOOGLE_TOKEN_BASE_URL + "/tokeninfo").queryParam("id_token", idToken).toUriString();
+            GoogleLoginResponse response = requestAccessToken(code);
+            String requestUrl = UriComponentsBuilder.fromHttpUrl(GOOGLE_TOKEN_BASE_URL + "/tokeninfo").queryParam("id_token", response.getId_token()).toUriString();
 
             return restTemplate.getForObject(requestUrl, GoogleUserInformation.class);
         } catch (SecurityException e) {
