@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.io.IOException;
 
 public interface MemberService {
-    void getOAuthRedirectURL();
-
     /**
      * Google API Server로부터 받은 code를 활용하여 사용자 인증 정보 요청
      * @param code Google API Server 에서 받아온 code
