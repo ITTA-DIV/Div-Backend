@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/member/login/oauth/google")
                 .requestMatchers("/api/v1/member/login/oauth/google/callback")
                 .requestMatchers("/api/v1/event")
+                .requestMatchers("/api/v1/event/search")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }

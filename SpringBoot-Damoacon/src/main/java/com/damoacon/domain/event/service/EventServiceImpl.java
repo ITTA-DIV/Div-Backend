@@ -5,6 +5,9 @@ import com.damoacon.domain.event.dto.SearchRequestDto;
 import com.damoacon.domain.event.dto.SearchResponseDto;
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.event.repository.EventRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +51,11 @@ public class EventServiceImpl implements EventService {
      * 검색 필터링 기능
      *
      * @param searchRequestDto - 검색 요청 DTO
+     * @param pageable
      * @return 검색 결과 DTO 리스트
      */
     @Override
-    public List<SearchResponseDto> getSearchEvents(SearchRequestDto searchRequestDto) {
+    public Page<SearchResponseDto> getSearchEvents(SearchRequestDto searchRequestDto, Pageable pageable) {
         // 검색 결과 이벤트 리스트 초기화
         List<Event> resultEvents = new ArrayList<>();
 
@@ -63,7 +67,7 @@ public class EventServiceImpl implements EventService {
             k_List.forEach(k -> resultEvents.addAll(eventRepository.findEventByKeyword(k)));
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -81,7 +85,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -97,7 +101,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -113,7 +117,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -129,7 +133,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -147,7 +151,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -163,7 +167,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -179,7 +183,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -195,13 +199,13 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoList(resultEvents);
+                return SearchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
         // 결과 이벤트 리스트를 SearchResponseDto로 변환
 
-        return SearchEventListToDtoList(resultEvents);
+        return SearchEventListToDtoPage(resultEvents, pageable);
     }
 
 
@@ -235,11 +239,11 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    private List<SearchResponseDto> SearchEventListToDtoList(List<Event> events) {
+    private Page<SearchResponseDto> SearchEventListToDtoPage(List<Event> events, Pageable pageable) {
         // 원하는 event startDate 문자열 형식
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E)");
 
-        return events.stream()
+        List<SearchResponseDto> searchResponseDtoList = events.stream()
                 .map(event -> {
                     SearchResponseDto dto = new SearchResponseDto();
                     dto.setId(event.getId());
@@ -265,5 +269,8 @@ public class EventServiceImpl implements EventService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
+
     }
 }
