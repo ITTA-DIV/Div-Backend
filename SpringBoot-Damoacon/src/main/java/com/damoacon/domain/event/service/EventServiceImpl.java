@@ -240,6 +240,9 @@ public class EventServiceImpl implements EventService {
     }
 
     private Page<SearchResponseDto> SearchEventListToDtoPage(List<Event> events, Pageable pageable) {
+
+        // 수동으로 날짜순으로 정렬.
+        events.sort(Comparator.comparing(Event::getStart_date));
         // 원하는 event startDate 문자열 형식
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E)");
 
@@ -269,7 +272,6 @@ public class EventServiceImpl implements EventService {
                     return dto;
                 })
                 .collect(Collectors.toList());
-
         return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
 
     }
