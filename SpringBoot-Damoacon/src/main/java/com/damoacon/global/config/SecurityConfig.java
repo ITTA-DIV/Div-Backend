@@ -38,6 +38,8 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/css/**")
                                 , new AntPathRequestMatcher("/images/**")
                         ).permitAll()
+                        .requestMatchers("/api/v1/member/login/oauth/google").permitAll()
+                        .requestMatchers("/api/v1/event").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterAfter(new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil), LogoutFilter.class)
@@ -49,9 +51,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers("/api/v1/member/login/oauth/google")
-                .requestMatchers("/api/v1/member/login/oauth/google/callback")
-                .requestMatchers("/api/v1/event")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
