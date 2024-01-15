@@ -26,12 +26,20 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EXPIRED_JWT.getMessage());
         } catch (JwtException | IllegalArgumentException e) {   // IllegalArgumentException: 메서드에 불법적이거나 부적절한 인수가 전달되었음을 나타내기 위한 Exception
+            log.error(e.getMessage());
+            e.printStackTrace();
             responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.INVALID_TOKEN.getMessage());
         } catch (GeneralException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             responseUtil.setResponse(response, e.getErrorCode().getHttpStatus().value(), e.getErrorCode().getMessage());
         } catch (AuthenticationServiceException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             responseUtil.setResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
