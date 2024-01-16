@@ -27,4 +27,12 @@ public class EventControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("getDetailEvent() Test")
+    public void getDetailEvent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/event/118"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
