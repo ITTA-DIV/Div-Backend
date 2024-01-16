@@ -230,7 +230,7 @@ public class EventServiceImpl implements EventService {
                 .hostProfile(event.getHostProfile())
                 .eventApplyStartDate(event.getApplyStartDate().toLocalDateTime().format(formatter))
                 .eventApplyEndDate(event.getApplyEndDate().toLocalDateTime().format(formatter))
-                .eventStartDate(event.getStartDate().toLocalDateTime().format(formatter))
+                .eventStartDate(event.getStart_date().toLocalDateTime().format(formatter))
                 .eventEndDate(event.getEnd_date().toLocalDateTime().format(formatter))
                 .build();
     }
