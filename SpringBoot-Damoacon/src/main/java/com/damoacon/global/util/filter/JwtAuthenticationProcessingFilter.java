@@ -56,11 +56,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             return;
         }
 
-        // access token 검증
-        String access_token = jwtUtil.decodeHeader(true, request);
-        Member member = jwtUtil.validateToken(access_token);
+        if (request.getHeader("Authorization") != null) {
+            // access token 검증
+            String access_token = jwtUtil.decodeHeader(true, request);
+            Member member = jwtUtil.validateToken(access_token);
 
-        saveAuthentication(member);
+            saveAuthentication(member);
+            filterChain.doFilter(request, response);
+        }
+
         filterChain.doFilter(request, response);
     }
 
