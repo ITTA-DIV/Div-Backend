@@ -33,13 +33,21 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws GeneralException, ServletException, IOException, ExpiredJwtException {
+        final String LOGIN_API_URL = "/api/v1/member/login/oauth/google";
+        final String MAIN_EVENT_URL = "/api/v1/event";
         final String TOKEN_REFRESH_API_URL = "/api/v1/member/refresh";
+        final String RESOURCE_URL = "/favicon.ico";
 
-        // refresh token을 헤더에 가지고 있는 경우 검증 후 token 재발급
-        String refresh_token = jwtUtil.decodeHeader(false, request);
+        String uri = request.getRequestURI();
+        System.out.println(uri);
+        if(uri.equals(LOGIN_API_URL) || uri.equals(MAIN_EVENT_URL) || uri.equals(RESOURCE_URL)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // uri가 refresh token 재발급 요청 uri이고, refresh_token이 null이 아닌 경우
-        if(request.getRequestURI().equals(TOKEN_REFRESH_API_URL) && refresh_token != null) {
+        if(request.getRequestURI().equals(TOKEN_REFRESH_API_URL)) {
+            String refresh_token = jwtUtil.decodeHeader(false, request);
             Member member = jwtUtil.validateToken(refresh_token);
             LoginResponseDto dto = jwtUtil.generateTokens(member);
 
@@ -48,11 +56,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             return;
         }
 
-        // access token 검증
-        String access_token = jwtUtil.decodeHeader(true, request);
-        Member member = jwtUtil.validateToken(access_token);
+        if (request.getHeader("Authorization") != null) {
+            // access token 검증
+            String access_token = jwtUtil.decodeHeader(true, request);
+            Member member = jwtUtil.validateToken(access_token);
 
-        saveAuthentication(member);
+            saveAuthentication(member);
+            filterChain.doFilter(request, response);
+        }
+
         filterChain.doFilter(request, response);
     }
 

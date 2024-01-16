@@ -1,5 +1,6 @@
 package com.damoacon.domain.event.service;
 
+import com.damoacon.domain.event.dto.DetailEventResponseDto;
 import com.damoacon.domain.event.dto.MainEventResponseDto;
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.event.repository.EventRepository;
@@ -43,6 +44,32 @@ public class EventServiceImpl implements EventService {
         return Arrays.asList(dtoListWithinEightDays, dtoListLast12Events, dtoListTop12Events);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public DetailEventResponseDto getDetailEvent(Long eventId) throws IllegalArgumentException {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 없습니다. eventId = " + eventId));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일(E) HH:mm");
+
+        return DetailEventResponseDto.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .thumbnail(event.getThumbnail())
+                .categoryId(event.getCategory().getId())
+                .categoryName(event.getCategory().getCategory_name())
+                .price(event.getPrice())
+                .link(event.getLink())
+                .location(event.getLocation())
+                .address(event.getAddress())
+                .host(event.getHost())
+                .hostProfile(event.getHostProfile())
+                .eventApplyStartDate(event.getApplyStartDate().toLocalDateTime().format(formatter))
+                .eventApplyEndDate(event.getApplyEndDate().toLocalDateTime().format(formatter))
+                .eventStartDate(event.getStartDate().toLocalDateTime().format(formatter))
+                .eventEndDate(event.getEnd_date().toLocalDateTime().format(formatter))
+                .build();
+    }
+
     // entity to dto
     private List<MainEventResponseDto> mapEventListToDtoList(List<Event> events) {
         // 원하는 event startDate 문자열 형식
@@ -61,7 +88,6 @@ public class EventServiceImpl implements EventService {
                     LocalDateTime applyEndDateTime = event.getApplyEndDate().toLocalDateTime();
                     long remainingDays = ChronoUnit.DAYS.between(currentDateTime, applyEndDateTime);
                     dto.setRemainingDays((int) remainingDays);
-                    // 날짜를 원하는 형식(MM월 dd일 (E))으로 변경
                     Timestamp timestamp = event.getStartDate();
                     LocalDateTime localDateTime = timestamp.toLocalDateTime();  // timestamp to localdatetime
                     String formattedDateTime = localDateTime.format(formatter);
