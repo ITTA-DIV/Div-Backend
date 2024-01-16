@@ -1,5 +1,6 @@
 package com.damoacon.domain.event.controller;
 
+import com.damoacon.domain.event.dto.DetailEventResponseDto;
 import com.damoacon.domain.event.dto.MainEventResponseDto;
 import com.damoacon.domain.event.service.EventService;
 import com.damoacon.global.common.ApiDataResponseDto;
@@ -18,5 +19,11 @@ public class EventController {
     public ApiDataResponseDto<List<List<MainEventResponseDto>>> getMainEvents() {
         List<List<MainEventResponseDto>> mainEvents = eventService.getMainEvents();
         return ApiDataResponseDto.of(mainEvents);
+    }
+
+    @GetMapping("/{eventId}")
+    public ApiDataResponseDto<DetailEventResponseDto> getDetailEvent(@PathVariable Long eventId) {
+
+        return ApiDataResponseDto.of(eventService.getDetailEvent(eventId));
     }
 }
