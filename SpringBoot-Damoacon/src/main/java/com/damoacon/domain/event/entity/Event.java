@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name="events")
@@ -23,7 +24,7 @@ public class Event {
 
     @Column(name = "start_date")
     @NotNull
-    private Timestamp startDate;
+    private Timestamp start_date;
 
     @Column(name = "end_date")
     @NotNull
@@ -75,6 +76,7 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
 
+
     @Column(name = "heart_count")
     @NotNull
     private Long heartCount = 0L;
@@ -82,7 +84,7 @@ public class Event {
     @Builder
     public Event(String title, Timestamp startDate, Timestamp endDate, String price, String location, String address, String host, String hostProfile, String link, Timestamp applyStartDate, Timestamp applyEndDate, String type, String thumbnail, int isPermit, Category category) {
         this.title = title;
-        this.startDate = startDate;
+        this.start_date = startDate;
         this.end_date = endDate;
         this.price = price;
         this.location = location;
@@ -96,5 +98,19 @@ public class Event {
         this.thumbnail = thumbnail;
         this.is_permit = isPermit;
         this.category = category;
+    }
+
+    //retainAll()이 작동하도록 하기 위함
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
