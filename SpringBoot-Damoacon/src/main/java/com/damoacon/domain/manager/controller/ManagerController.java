@@ -60,7 +60,6 @@ public class ManagerController {
             boolean memberIsManager = Role.ADMIN.equals(contextUser.getMember().getRole());
 
             ManagerCheckDto managerCheckDto = new ManagerCheckDto(memberId, memberUserName, memberIsManager);
-            System.out.println("왤까");
             return ApiDataResponseDto.of(managerCheckDto);
 
         } catch (Exception e) {

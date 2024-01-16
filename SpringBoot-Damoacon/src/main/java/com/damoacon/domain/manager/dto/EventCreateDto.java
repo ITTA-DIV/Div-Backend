@@ -21,7 +21,7 @@ public class EventCreateDto {
     private String title;
 
     @NotBlank(message = "There is no startDate")
-    private Timestamp startDate;
+    private Timestamp star_date;
 
     @NotBlank(message = "There is no end_date")
     private Timestamp end_date;
@@ -63,7 +63,7 @@ public class EventCreateDto {
         int is_permit=0;
         return Event.builder()
                 .title(title)
-                .startDate(startDate)
+                .startDate(star_date)
                 .endDate(end_date)
                 .price(price)
                 .location(location)
