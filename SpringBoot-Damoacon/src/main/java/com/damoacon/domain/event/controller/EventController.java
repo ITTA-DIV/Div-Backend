@@ -1,5 +1,6 @@
 package com.damoacon.domain.event.controller;
 
+import com.damoacon.domain.event.dto.DetailEventResponseDto;
 import com.damoacon.domain.event.dto.MainEventResponseDto;
 import com.damoacon.domain.event.dto.SearchRequestDto;
 import com.damoacon.domain.event.dto.SearchResponseDto;
@@ -24,7 +25,7 @@ public class EventController {
         List<List<MainEventResponseDto>> mainEvents = eventService.getMainEvents();
         return ApiDataResponseDto.of(mainEvents);
     }
-
+  
     @GetMapping("/search")
     public ApiDataResponseDto<Page<SearchResponseDto>> searchEvents(SearchRequestDto searchRequestDto,
                                                                     @RequestParam(name = "page", defaultValue = "0") int page,
@@ -32,5 +33,11 @@ public class EventController {
         Pageable pageable = PageRequest.of(page, size);
         Page<SearchResponseDto> searchResponseDtoList = eventService.getSearchEvents(searchRequestDto, pageable);
         return ApiDataResponseDto.of(searchResponseDtoList);
+    }
+  
+    @GetMapping("/{eventId}")
+    public ApiDataResponseDto<DetailEventResponseDto> getDetailEvent(@PathVariable Long eventId) {
+
+        return ApiDataResponseDto.of(eventService.getDetailEvent(eventId));
     }
 }

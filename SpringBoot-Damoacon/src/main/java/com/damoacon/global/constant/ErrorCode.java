@@ -15,9 +15,8 @@ public enum ErrorCode {
     OK(0, HttpStatus.OK, "Ok"),
 
     BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request"),
-    INVALID_ACCESS(10001, HttpStatus.BAD_REQUEST, "Invalid access"),
-    VALIDATION_ERROR(10002, HttpStatus.BAD_REQUEST, "Validation error"),
-    NOT_FOUND(10003, HttpStatus.NOT_FOUND, "Requested resource is not found"),
+    VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
+    NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
 
     INTERNAL_SERVER_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
@@ -27,8 +26,16 @@ public enum ErrorCode {
     ACCESS_TOKEN_REQUIRED(40002, HttpStatus.UNAUTHORIZED, "Access Token required."),
     REFRESH_TOKEN_REQUIRED(40003, HttpStatus.UNAUTHORIZED, "Refresh Token required."),
     INVALID_TOKEN(40004, HttpStatus.UNAUTHORIZED, "Invalid token."),
-    EXPIRED_JWT(40004, HttpStatus.UNAUTHORIZED, "Token expired."),
-    LOGIN_REQUIRED(40005, HttpStatus.FORBIDDEN, "Login required.");
+    EXPIRED_JWT(40005, HttpStatus.UNAUTHORIZED, "Token expired."),
+    LOGIN_REQUIRED(40006, HttpStatus.FORBIDDEN, "Login required."),
+
+    // Google Login Error
+    CODE_REQUIRED(11000, HttpStatus.BAD_REQUEST, "Code required."),
+    LOGIN_FAILED(11001, HttpStatus.UNAUTHORIZED, "Login failed."),
+    INVALID_CODE(11002, HttpStatus.UNAUTHORIZED, "Invalid Code."),
+
+    // Member Error
+    MEMBER_NOT_FOUND(12000, HttpStatus.UNAUTHORIZED, "Member not found.");
 
     private final Integer code;
     private final HttpStatus httpStatus;
