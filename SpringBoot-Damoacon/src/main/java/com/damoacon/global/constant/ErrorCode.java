@@ -18,10 +18,24 @@ public enum ErrorCode {
     VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
     NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
 
-    INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
+    INTERNAL_SERVER_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
 
-    UNAUTHORIZED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized");
+    AUTHENTICATION_FAILED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized"),
+    AUTHORIZATION_FAILED(40001, HttpStatus.UNAUTHORIZED, "Authorization failed."),
+    ACCESS_TOKEN_REQUIRED(40002, HttpStatus.UNAUTHORIZED, "Access Token required."),
+    REFRESH_TOKEN_REQUIRED(40003, HttpStatus.UNAUTHORIZED, "Refresh Token required."),
+    INVALID_TOKEN(40004, HttpStatus.UNAUTHORIZED, "Invalid token."),
+    EXPIRED_JWT(40005, HttpStatus.UNAUTHORIZED, "Token expired."),
+    LOGIN_REQUIRED(40006, HttpStatus.FORBIDDEN, "Login required."),
+
+    // Google Login Error
+    CODE_REQUIRED(11000, HttpStatus.BAD_REQUEST, "Code required."),
+    LOGIN_FAILED(11001, HttpStatus.UNAUTHORIZED, "Login failed."),
+    INVALID_CODE(11002, HttpStatus.UNAUTHORIZED, "Invalid Code."),
+
+    // Member Error
+    MEMBER_NOT_FOUND(12000, HttpStatus.UNAUTHORIZED, "Member not found.");
 
     private final Integer code;
     private final HttpStatus httpStatus;
@@ -50,7 +64,7 @@ public enum ErrorCode {
                     if (httpStatus.is4xxClientError()) {
                         return ErrorCode.BAD_REQUEST;
                     } else if (httpStatus.is5xxServerError()) {
-                        return ErrorCode.INTERNAL_ERROR;
+                        return ErrorCode.INTERNAL_SERVER_ERROR;
                     } else {
                         return ErrorCode.OK;
                     }

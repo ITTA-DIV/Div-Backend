@@ -8,12 +8,12 @@ public class ApiDataResponseDto<T> extends ApiResponseDto {
     private final T data;
 
     private ApiDataResponseDto(T data) {
-        super(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage());
+        super(ErrorCode.OK.getCode(), ErrorCode.OK.getMessage());
         this.data = data;
     }
 
     private ApiDataResponseDto(T data, String message) {
-        super(true, ErrorCode.OK.getCode(), message);
+        super(ErrorCode.OK.getCode(), message);
         this.data = data;
     }
 
