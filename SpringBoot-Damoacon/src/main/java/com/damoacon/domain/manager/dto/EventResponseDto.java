@@ -35,7 +35,7 @@ public class EventResponseDto {
         EventResponseDto dto = new EventResponseDto();
         dto.setId(event.getId());
         dto.setTitle(event.getTitle());
-        dto.setStartDate(event.getStartDate());
+        dto.setStartDate(event.getStart_date());
         dto.setEndDate(event.getEnd_date());
         dto.setPrice(event.getPrice());
         dto.setLocation(event.getLocation());
