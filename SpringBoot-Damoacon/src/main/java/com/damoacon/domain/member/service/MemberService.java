@@ -2,9 +2,7 @@ package com.damoacon.domain.member.service;
 
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
-import com.damoacon.domain.member.dto.LoginResponseDto;
 import com.damoacon.domain.member.dto.MemberResponseDto;
-import com.damoacon.global.common.ApiDataResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PathVariable;
