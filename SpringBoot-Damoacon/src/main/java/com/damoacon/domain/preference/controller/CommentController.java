@@ -19,4 +19,10 @@ public class CommentController {
 
         return commentService.postComment(eventId, contextUser.getMember(), commentRequestDto);
     }
+
+    @DeleteMapping("/{commentId}")
+    public Long deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal ContextUser contextUser) {
+
+        return commentService.deleteComment(commentId, contextUser.getMember());
+    }
 }

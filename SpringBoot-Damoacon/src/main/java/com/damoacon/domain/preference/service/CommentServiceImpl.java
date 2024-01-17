@@ -38,6 +38,25 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment).getId();
     }
 
+    @Override
+    @Transactional
+    public Long deleteComment(Long commentId, Member member) throws GeneralException, IllegalArgumentException {
+        commentRepository.delete(validateDeleteComment(commentId, member));
+
+        return commentId;
+    }
+
+    private Comment validateDeleteComment(Long commentId, Member member) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new GeneralException(ErrorCode.COMMENT_NOT_FOUND));
+        memberRepository.findById(member.getId()).orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if(member.getId() != comment.getMember().getId()) { // 댓글을 작성한 멤버의 id와 댓글을 삭제하려는 멤버 id가 다른 경우
+            throw new IllegalArgumentException("댓글을 작성한 멤버와 삭제하려는 멤버가 일치하지 않습니다.");
+        } else {
+            return comment;
+        }
+    }
+
     private Event validateEvent(Long eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
 
