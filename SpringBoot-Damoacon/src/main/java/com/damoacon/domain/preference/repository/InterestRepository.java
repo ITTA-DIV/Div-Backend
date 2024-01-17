@@ -1,9 +1,13 @@
 package com.damoacon.domain.preference.repository;
 
+import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.preference.entity.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface InterestRepository extends JpaRepository<Interest, Long> {
+    List<Interest> findAllByMember(Member member);
 }
