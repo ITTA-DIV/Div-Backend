@@ -1,9 +1,13 @@
 package com.damoacon.domain.preference.controller;
 
+import com.damoacon.domain.event.entity.Event;
+import com.damoacon.domain.event.repository.EventRepository;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.repository.MemberRepository;
 import com.damoacon.domain.model.TokenClaimVo;
 import com.damoacon.domain.preference.dto.comment.CommentRequestDto;
+import com.damoacon.domain.preference.entity.Comment;
+import com.damoacon.domain.preference.repository.CommentRepository;
 import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.exception.GeneralException;
 import com.damoacon.global.util.JwtUtil;
@@ -38,7 +42,13 @@ public class CommentControllerTest {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -62,6 +72,33 @@ public class CommentControllerTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto));  // 위에서 생성한 액세스 토큰을 헤더에 추가
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("deleteComment() Test")
+    public void deleteComment() throws Exception {
+        Member member = memberRepository.findById(1L).orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
+        Event event = eventRepository.findById(118L).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
+
+        Comment comment = Comment.builder()
+                .event(event)
+                .member(member)
+                .content("comment")
+                .build();
+
+        commentRepository.save(comment);
+
+        // 댓글을 작성하려는 멤버의 액세스 토큰을 생성
+        TokenClaimVo vo = new TokenClaimVo(member.getId(), member.getEmail());
+        String accessToken = jwtUtil.generateToken(true, vo);
+
+        // mockMvc 요청 구성
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/api/v1/comment/{id}", comment.getId())
+                .header("Authorization", "Bearer " + accessToken);  // 위에서 생성한 액세스 토큰을 헤더에 추가
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
