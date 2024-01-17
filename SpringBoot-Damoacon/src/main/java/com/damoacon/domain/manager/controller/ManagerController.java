@@ -20,15 +20,16 @@ import java.util.List;
 public class ManagerController {
     private final ManagerServiceImpl managerService;
 
-    @Secured("permitAll")
     @PostMapping
     public ApiDataResponseDto<EventResponseDto> save(@RequestBody EventCreateDto requestDto){
+        System.out.println("0");
         try{
+            System.out.println("1");
             EventResponseDto newEvents = managerService.eventCreate(requestDto);
+            System.out.println("2");
             return ApiDataResponseDto.of(newEvents);
         } catch (Exception e) {
             throw new IllegalArgumentException("이벤트 신청 생성 실패.title이 중복되는 event는 등록할수 없습니다");
-
         }
     }
 
