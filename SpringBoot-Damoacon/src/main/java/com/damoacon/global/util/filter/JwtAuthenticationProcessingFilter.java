@@ -63,6 +63,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
             saveAuthentication(member);
             filterChain.doFilter(request, response);
+
+            return;
         }
 
         filterChain.doFilter(request, response);
