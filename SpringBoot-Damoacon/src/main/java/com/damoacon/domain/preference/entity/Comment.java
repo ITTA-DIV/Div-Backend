@@ -2,6 +2,7 @@ package com.damoacon.domain.preference.entity;
 
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.member.entity.Member;
+import com.damoacon.domain.model.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name="comment")
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
