@@ -5,6 +5,7 @@ import com.damoacon.domain.event.repository.EventRepository;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.repository.MemberRepository;
 import com.damoacon.domain.preference.dto.comment.CommentRequestDto;
+import com.damoacon.domain.preference.dto.comment.CommentResponseDto;
 import com.damoacon.domain.preference.entity.Comment;
 import com.damoacon.domain.preference.repository.CommentRepository;
 import com.damoacon.global.constant.ErrorCode;
@@ -13,6 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,6 +51,16 @@ public class CommentServiceImpl implements CommentService {
         return commentId;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getComments(Long eventId, Member member) {
+         List<Comment> comments = commentRepository.findCommentsByEventId(validateEvent(eventId).getId());
+
+        return comments.stream()
+                .map(comment -> toResponse(comment, member))
+                .collect(Collectors.toList());
+    }
+
     private Comment validateDeleteComment(Long commentId, Member member) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new GeneralException(ErrorCode.COMMENT_NOT_FOUND));
         memberRepository.findById(member.getId()).orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
@@ -61,5 +76,22 @@ public class CommentServiceImpl implements CommentService {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
 
         return event;
+    }
+
+    private CommentResponseDto toResponse(Comment comment, Member member) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm");
+
+        boolean isMine = false;
+        if (member != null) isMine = member.getId().equals(comment.getMember().getId());
+
+        return CommentResponseDto.builder()
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .creationTime(comment.getLastModifiedTime().format(formatter))
+                .writerId(comment.getMember().getId())
+                .writerName(comment.getMember().getUsername())
+                .writerProfile(comment.getMember().getProfile())
+                .isMine(isMine)
+                .build();
     }
 }
