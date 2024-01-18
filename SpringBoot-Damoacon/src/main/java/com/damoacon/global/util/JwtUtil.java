@@ -9,16 +9,18 @@ import com.damoacon.global.exception.GeneralException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.Duration;
 import java.util.*;
 
-import static io.jsonwebtoken.Jwts.builder;
-import static io.jsonwebtoken.Jwts.parser;
+import static io.jsonwebtoken.Jwts.*;
 
 @RequiredArgsConstructor
 @Component
@@ -63,29 +65,27 @@ public class JwtUtil {
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .setSubject(subject)
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(JWT_SECRET_KEY.getBytes()))
+                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // Validate Token
-    public boolean validateToken(String token) {
-        try {
-            // 토큰 검증
-            Map<String, Object> payloads = parser()
-                    .setSigningKey(JWT_SECRET_KEY.getBytes())
-                    .parseClaimsJws(token)
-                    .getBody();
+    public boolean validateToken(String token) throws ExpiredJwtException {
+        // 토큰 검증
+        parserBuilder()
+                .setSigningKey(getSigninKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
-            return true;
-        } catch (ExpiredJwtException e) {
-            throw e;
-        }
+        return true;
     }
 
     public Member getMember(String token) {
         // 검증 및 payload 추출
-        Map<String, Object> payloads = parser()
-                .setSigningKey(JWT_SECRET_KEY.getBytes())
+        Map<String, Object> payloads = parserBuilder()
+                .setSigningKey(getSigninKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -100,14 +100,14 @@ public class JwtUtil {
         final String REFRESH_HEADER = "Authorization-refresh";
         final String header = isAccessToken ? ACCESS_HEADER : REFRESH_HEADER;
 
-        String header_value = request.getHeader(header);
-        if(isAccessToken && header_value == null) {
+        String headerValue = request.getHeader(header);
+        if(isAccessToken && headerValue == null) {
             return null;
-        } else if (header_value == null) {
-            return null;
+        } else if(!isAccessToken && headerValue == null) {
+            throw new GeneralException(ErrorCode.REFRESH_TOKEN_REQUIRED);
         }
 
-        return decodeBearer(header_value);
+        return decodeBearer(headerValue);
     }
 
     // Decode Bearer
@@ -120,5 +120,11 @@ public class JwtUtil {
         }
 
         return tokenParts.get(1);
+    }
+
+    // secretKey 로드
+    private Key getSigninKey() {
+        byte[] keyBytes = JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
