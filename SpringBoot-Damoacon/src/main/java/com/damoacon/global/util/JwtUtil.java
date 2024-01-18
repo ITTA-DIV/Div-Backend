@@ -111,8 +111,14 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    public String decodeBearer(String bearer_token) {
+    public String decodeBearer(String bearerToken) {
         final String BEARER = "Bearer ";
-        return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
+        List<String> tokenParts = Arrays.asList(bearerToken.split(BEARER));
+
+        if (tokenParts.size() < 2) {
+            throw new GeneralException(ErrorCode.INVALID_TOKEN);
+        }
+
+        return tokenParts.get(1);
     }
 }
