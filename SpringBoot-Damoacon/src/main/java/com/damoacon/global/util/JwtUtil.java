@@ -6,6 +6,7 @@ import com.damoacon.domain.member.repository.MemberRepository;
 import com.damoacon.domain.model.TokenClaimVo;
 import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.exception.GeneralException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,7 +68,21 @@ public class JwtUtil {
     }
 
     // Validate Token
-    public Member validateToken(String token) throws GeneralException {
+    public boolean validateToken(String token) {
+        try {
+            // 토큰 검증
+            Map<String, Object> payloads = parser()
+                    .setSigningKey(JWT_SECRET_KEY.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
+        }
+    }
+
+    public Member getMember(String token) {
         // 검증 및 payload 추출
         Map<String, Object> payloads = parser()
                 .setSigningKey(JWT_SECRET_KEY.getBytes())
@@ -87,7 +102,7 @@ public class JwtUtil {
 
         String header_value = request.getHeader(header);
         if(isAccessToken && header_value == null) {
-            throw new GeneralException(ErrorCode.ACCESS_TOKEN_REQUIRED);
+            return null;
         } else if (header_value == null) {
             return null;
         }
@@ -96,12 +111,8 @@ public class JwtUtil {
     }
 
     // Decode Bearer
-    public String decodeBearer(String bearer_token) throws GeneralException {
-        try {
-            final String BEARER = "Bearer ";
-            return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new GeneralException(ErrorCode.INVALID_TOKEN);
-        }
+    public String decodeBearer(String bearer_token) {
+        final String BEARER = "Bearer ";
+        return Arrays.stream(bearer_token.split(BEARER)).toList().get(1);
     }
 }
