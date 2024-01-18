@@ -11,6 +11,7 @@ import java.util.Objects;
 @Entity
 @Table(name="events")
 @Getter
+@Setter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Event {
     @Id
