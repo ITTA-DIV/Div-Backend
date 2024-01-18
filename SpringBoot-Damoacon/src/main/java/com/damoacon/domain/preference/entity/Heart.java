@@ -2,15 +2,14 @@ package com.damoacon.domain.preference.entity;
 
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.member.entity.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name="heart")
 @Getter
+@Setter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Heart {
     @Id
@@ -18,6 +17,7 @@ public class Heart {
     @Column(name = "heart_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;

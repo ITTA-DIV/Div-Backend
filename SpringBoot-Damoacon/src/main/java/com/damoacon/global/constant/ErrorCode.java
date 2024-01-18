@@ -35,7 +35,13 @@ public enum ErrorCode {
     INVALID_CODE(11002, HttpStatus.UNAUTHORIZED, "Invalid Code."),
 
     // Member Error
-    MEMBER_NOT_FOUND(12000, HttpStatus.UNAUTHORIZED, "Member not found.");
+    MEMBER_NOT_FOUND(12000, HttpStatus.UNAUTHORIZED, "Member not found."),
+
+    // Event Error
+    EVENT_NOT_FOUND(13000, HttpStatus.UNAUTHORIZED, "Event not found."),
+
+    // Comment Error
+    COMMENT_NOT_FOUND(14000, HttpStatus.UNAUTHORIZED, "Comment not found.");
 
     private final Integer code;
     private final HttpStatus httpStatus;

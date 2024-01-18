@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/v1/member/login/oauth/google").permitAll()
                         .requestMatchers("/api/v1/member/**").permitAll()
+                        .requestMatchers("/api/v1/comment/**").permitAll()
                         .requestMatchers("/api/v1/event/**").permitAll()
                         .anyRequest().authenticated()
                 )
