@@ -185,7 +185,7 @@ def crawl_page(page):
 
             tuple=(title,startdate,enddate,price,location,address,host,host_profile,link,applystart,applyend,type,category_id,thumbnail,is_permit)
             tuples.append(tuple)
-        except:
+        except Exception as e:
             print("이 페이지는 크롤링 할 수 없습니다")
 
     driver.quit()
