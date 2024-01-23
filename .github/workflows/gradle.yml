@@ -49,8 +49,8 @@ jobs:
         cd ./SpringBoot-Damoacon
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
         docker build -t app .
-        docker tag app ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
+        docker tag app ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
 
     - name: Make config.py
       run: |
@@ -96,8 +96,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }} # pem 키
         # 도커 작업
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
-          docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/damoacon:latest
-          docker rm $(docker ps --filter 'status=exited' -a -q)
+          docker rm -f $(docker ps -qa)
+          docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+          docker-compose up -d
           docker image prune -a -f
