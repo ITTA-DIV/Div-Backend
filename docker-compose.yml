@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  web:
+    container_name: web
+    image: suucong2877/damoacon
+    expose:
+      - 8080
+    restart: always
+    ports:
+      - 8080:8080
