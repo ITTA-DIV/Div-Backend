@@ -30,10 +30,10 @@ jwt:
   issuer: ${JWT_ISSUER}
   secret: ${JWT_SECRET_KEY}
 
-# SSL
-server:
-  ssl:
-    enabled: true
-    key-store: ./SpringBoot-Damoacon/src/main/resources/keystore.p12
-    key-store-password: ${SSL_KEY_STORE_SECRET}
-    key-store-type: PKCS12
+## SSL
+#server:
+#  ssl:
+#    enabled: true
+#    key-store: ./SpringBoot-Damoacon/src/main/resources/keystore.p12
+#    key-store-password: ${SSL_KEY_STORE_SECRET}
+#    key-store-type: PKCS12
