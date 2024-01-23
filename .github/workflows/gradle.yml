@@ -48,7 +48,7 @@ jobs:
       run: |
         cd ./SpringBoot-Damoacon
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        docker build -t app .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
         docker tag app ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
 
@@ -98,5 +98,5 @@ jobs:
         script: |
           docker rm -f $(docker ps -qa)
           docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-          docker compose up -d
+          docker compose up ./SpringBoot-Damoacon/docker-compose.yml -d
           docker image prune -a -f
