@@ -98,5 +98,5 @@ jobs:
         script: |
           docker rm -f $(docker ps -qa)
           docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-          docker-compose up -d
+          docker compose up -d
           docker image prune -a -f
