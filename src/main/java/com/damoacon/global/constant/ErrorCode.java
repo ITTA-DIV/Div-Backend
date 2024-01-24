@@ -28,6 +28,7 @@ public enum ErrorCode {
     INVALID_TOKEN(40004, HttpStatus.UNAUTHORIZED, "Invalid token."),
     EXPIRED_JWT(40005, HttpStatus.UNAUTHORIZED, "Token expired."),
     LOGIN_REQUIRED(40006, HttpStatus.FORBIDDEN, "Login required."),
+    UNAUTHORIZED_ROLE(40007, HttpStatus.FORBIDDEN, "Unauthorized role."),
 
     // Google Login Error
     CODE_REQUIRED(11000, HttpStatus.BAD_REQUEST, "Code required."),
