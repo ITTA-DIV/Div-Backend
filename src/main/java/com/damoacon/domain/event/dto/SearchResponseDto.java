@@ -20,5 +20,4 @@ public class SearchResponseDto {
     private String location;
     private String address;
     private String type;
-
 }

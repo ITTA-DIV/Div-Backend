@@ -32,30 +32,30 @@ public class EventServiceImpl implements EventService {
     public List<List<MainEventResponseDto>> getMainEvents() {
         Timestamp eightDaysAfter = Timestamp.valueOf(LocalDateTime.now().plusDays(8));  // 현재 시간을 기준으로 8일을 더하기
 
-        // 현재 시간을 기준으로 8일 이내의 이벤트 리스트 가져오기
+        // 현재 시간을 기준으로 8일 이내의 이벤트 리스트
         List<Event> eventsWithinEightDays = eventRepository.findEventsWithinEightDays(eightDaysAfter);
         List<MainEventResponseDto> dtoListWithinEightDays = mapEventListToDtoList(eventsWithinEightDays);
 
-        // 최상위 12개의 이벤트 리스트 가져오기
+        // 최상위 12개의 이벤트 리스트
         List<Event> last12Events = eventRepository.findLast12Events();
         List<MainEventResponseDto> dtoListLast12Events = mapEventListToDtoList(last12Events);
 
-        // 좋아요 수 기준으로 상위 12개의 이벤트 리스트 가져오기
+        // 좋아요 수 기준으로 상위 12개의 이벤트 리스트
         List<Event> top12EventsByHeartCount = eventRepository.findTop12EventsByHeartCount();
         List<MainEventResponseDto> dtoListTop12Events = mapEventListToDtoList(top12EventsByHeartCount);
 
-        // 각각의 DTO 리스트를 리스트로 묶어 반환
         return Arrays.asList(dtoListWithinEightDays, dtoListLast12Events, dtoListTop12Events);
     }
 
     /**
-     * 검색 필터링 기능
+     * 검색 필터링
      *
      * @param searchRequestDto - 검색 요청 DTO
      * @param pageable
      * @return 검색 결과 DTO 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<SearchResponseDto> getSearchEvents(SearchRequestDto searchRequestDto, Pageable pageable) {
         // 검색 결과 이벤트 리스트 초기화
         List<Event> resultEvents = new ArrayList<>();
@@ -68,7 +68,7 @@ public class EventServiceImpl implements EventService {
             k_List.forEach(k -> resultEvents.addAll(eventRepository.findEventByKeyword(k)));
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -86,7 +86,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -102,7 +102,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -118,7 +118,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -134,7 +134,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -152,7 +152,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -168,7 +168,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -184,7 +184,7 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
@@ -200,15 +200,20 @@ public class EventServiceImpl implements EventService {
             }
             // 결과 리스트가 비어있으면 빈 DTO 리스트 반환
             if (resultEvents.isEmpty()) {
-                return SearchEventListToDtoPage(resultEvents, pageable);
+                return searchEventListToDtoPage(resultEvents, pageable);
             }
         }
 
         // 결과 이벤트 리스트를 SearchResponseDto로 변환
-
-        return SearchEventListToDtoPage(resultEvents, pageable);
+        return searchEventListToDtoPage(resultEvents, pageable);
     }
 
+    /**
+     * 이벤트 상세화면 조회
+     * @param eventId 이벤트 번호를 통해 이벤트 조회
+     * @return
+     * @throws IllegalArgumentException 없는 번호일 경우 예외 처리
+     */
     @Override
     @Transactional(readOnly = true)
     public DetailEventResponseDto getDetailEvent(Long eventId) throws IllegalArgumentException {
@@ -249,15 +254,8 @@ public class EventServiceImpl implements EventService {
                     dto.setHost(event.getHost());
                     dto.setHostProfile(event.getHostProfile());
                     dto.setCategory_name(event.getCategory().getCategory_name());
-                    LocalDateTime currentDateTime = LocalDateTime.now();
-                    LocalDateTime applyEndDateTime = event.getApplyEndDate().toLocalDateTime();
-                    long remainingDays = ChronoUnit.DAYS.between(currentDateTime, applyEndDateTime);
-                    dto.setRemainingDays((int) remainingDays);
-                    // 날짜를 원하는 형식(MM월 dd일 (E))으로 변경
-                    Timestamp timestamp = event.getStart_date();
-                    LocalDateTime localDateTime = timestamp.toLocalDateTime();  // timestamp to localdatetime
-                    String formattedDateTime = localDateTime.format(formatter);
-                    dto.setEventDateTimeString(formattedDateTime);
+                    dto.setRemainingDays((int) ChronoUnit.DAYS.between(LocalDateTime.now(), event.getApplyEndDate().toLocalDateTime()));
+                    dto.setEventDateTimeString(event.getStart_date().toLocalDateTime().format(formatter));
                     dto.setIsFree("무료".equals(event.getPrice()) ? 1 : 0);   // event의 price가 무료이면 1, 아니면 0을 반환
 
                     return dto;
@@ -265,8 +263,8 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    private Page<SearchResponseDto> SearchEventListToDtoPage(List<Event> events, Pageable pageable) {
-
+    // entity to dto
+    private Page<SearchResponseDto> searchEventListToDtoPage(List<Event> events, Pageable pageable) {
         // 수동으로 날짜순으로 정렬.
         events.sort(Comparator.comparing(Event::getStart_date));
         // 원하는 event startDate 문자열 형식
@@ -284,21 +282,14 @@ public class EventServiceImpl implements EventService {
                     dto.setLocation(event.getLocation());
                     dto.setAddress(event.getAddress());
                     dto.setType(event.getType());
-                    LocalDateTime currentDateTime = LocalDateTime.now();
-                    LocalDateTime applyEndDateTime = event.getApplyEndDate().toLocalDateTime();
-                    long remainingDays = ChronoUnit.DAYS.between(currentDateTime, applyEndDateTime);
-                    dto.setRemainingDays((int) remainingDays);
-                    // 날짜를 원하는 형식(MM월 dd일 (E))으로 변경
-                    Timestamp timestamp = event.getStart_date();
-                    LocalDateTime localDateTime = timestamp.toLocalDateTime();  // timestamp to localdatetime
-                    String formattedDateTime = localDateTime.format(formatter);
-                    dto.setEventDateTimeString(formattedDateTime);
+                    dto.setRemainingDays((int) ChronoUnit.DAYS.between(LocalDateTime.now(), event.getApplyEndDate().toLocalDateTime()));
+                    dto.setEventDateTimeString(event.getStart_date().toLocalDateTime().format(formatter));
                     dto.setIsFree("무료".equals(event.getPrice()) ? 1 : 0);   // event의 price가 무료이면 1, 아니면 0을 반환
 
                     return dto;
                 })
                 .collect(Collectors.toList());
-        return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
 
+        return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
     }
 }
