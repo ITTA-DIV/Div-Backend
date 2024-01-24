@@ -22,6 +22,7 @@ services:
       - 443:443
     depends_on:
       - server
+    command : "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   certbot:
     image: certbot/certbot
