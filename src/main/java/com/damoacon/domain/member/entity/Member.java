@@ -36,6 +36,6 @@ public class Member {
         this.username = username;
         this.profile = profile;
         this.email = email;
-        this.role = Role.USER;
+        this.role = Role.ROLE_USER;
     }
 }
