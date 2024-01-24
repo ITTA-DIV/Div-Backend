@@ -1,4 +1,4 @@
-package com.damoacon.domain.preference.dto;
+package com.damoacon.domain.preference.dto.interest;
 
 import com.damoacon.domain.preference.entity.Interest;
 import lombok.AllArgsConstructor;

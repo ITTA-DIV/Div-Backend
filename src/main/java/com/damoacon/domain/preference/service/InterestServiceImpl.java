@@ -4,8 +4,8 @@ import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.event.repository.CategoryRepository;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.domain.preference.dto.InterestDto;
-import com.damoacon.domain.preference.dto.InterestSimpleDto;
+import com.damoacon.domain.preference.dto.interest.InterestDto;
+import com.damoacon.domain.preference.dto.interest.InterestSimpleDto;
 import com.damoacon.domain.preference.entity.Interest;
 import com.damoacon.domain.preference.repository.InterestRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,9 +48,8 @@ public class InterestServiceImpl implements InterestService{
         Member member = contextUser.getMember();
 
         if (interestRepository.existsByMemberAndCategory(member, cate)) {
-            throw new IllegalStateException("이미 관심분야임");
+            throw new IllegalStateException("이미 관심분야에 포함되어있음");
         }
-
 
         InterestDto interestDto = new InterestDto();
         Interest newInterest = interestDto.toEntity(member, cate);

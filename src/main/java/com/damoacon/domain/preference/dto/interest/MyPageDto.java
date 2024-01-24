@@ -1,8 +1,8 @@
-package com.damoacon.domain.preference.dto;
+package com.damoacon.domain.preference.dto.interest;
 
-import lombok.AllArgsConstructor;
+import com.damoacon.domain.preference.dto.heart.EventSimpleDto;
+import com.damoacon.domain.preference.dto.heart.MemberSimpleDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
