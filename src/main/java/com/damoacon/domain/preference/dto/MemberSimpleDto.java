@@ -2,9 +2,7 @@ package com.damoacon.domain.preference.dto;
 
 import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.member.entity.Member;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -21,10 +19,7 @@ public class MemberSimpleDto {
     public MemberSimpleDto(Member member, List<Category> categories) {
         this.id = member.getId();
         this.username = member.getUsername();
-        this.nickname = member.getNickname();
         this.profile = member.getProfile();
         this.interest = categories;
     }
-
-
 }

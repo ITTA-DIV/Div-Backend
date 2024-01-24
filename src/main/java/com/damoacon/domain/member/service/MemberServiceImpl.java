@@ -1,6 +1,5 @@
 package com.damoacon.domain.member.service;
 
-import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
@@ -21,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,40 +49,13 @@ public class MemberServiceImpl implements MemberService {
                 .profile(googleUserInformation.getPicture())
                 .build();
 
-        Optional<Member> existingMemberOptional = memberRepository.findOneByEmail(requestMember.getEmail());
+        Member member = memberRepository.findOneByEmail(requestMember.getEmail())
+                .orElseGet(() -> memberRepository.save(requestMember));
 
-        if (existingMemberOptional.isPresent()) {
-            requestMember = existingMemberOptional.get();
-        } else {
-            requestMember = memberRepository.save(requestMember);
-        }
-
-        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(requestMember));
+        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public MemberResponseDto getMember(Long id) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-
-            MemberResponseDto memberResponseDto = MemberResponseDto.builder()
-                    .id(member.getId())
-                    .username(member.getUsername())
-                    .profile(member.getProfile())
-                    .email(member.getEmail())
-                    .nickname(member.getNickname())
-                    .build();
-
-            return memberResponseDto;
-        } else {
-            throw new IllegalArgumentException("해당 id에 해당하는 멤버가 없습니다. id = " + id);
-        }
-    }
-
-    // id_token을 통해 구글에서 유저정보를 요청해 반환 받는 메소드
+    // id_token을 통해 구글에서 유저정보를 요청해 반환
     @Override
     @Transactional
     public GoogleUserInformation getUserInformation(HttpServletRequest request) {
@@ -105,13 +76,8 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    /**
-     *
-     * @param code Google API Server 에서 받아온 code
-     * @return 를 바탕으로 유저정보를 요청할 수 있는 GoogleLoginResponse를 반환
-     */
-    @Override
-    public GoogleLoginResponse requestAccessToken(String code) {
+    // Google API Server 에서 받아온 code를 통해 구글에 토큰 요청
+    private GoogleLoginResponse requestAccessToken(String code) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -122,12 +88,9 @@ public class MemberServiceImpl implements MemberService {
             params.put("redirect_uri", GOOGLE_REDIRECT_URI);
             params.put("grant_type", "authorization_code");
 
-            GoogleLoginResponse googleLoginResponse =
-                    restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL + "/token", params, GoogleLoginResponse.class).getBody();
-
-            return googleLoginResponse;
+            return restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL + "/token", params, GoogleLoginResponse.class).getBody();
         } catch (Exception e) {
-            throw new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다 :: " + GOOGLE_TOKEN_BASE_URL);
+            throw new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다: " + GOOGLE_TOKEN_BASE_URL);
         }
     }
 }
