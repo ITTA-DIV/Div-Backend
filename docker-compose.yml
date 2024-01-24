@@ -1,11 +1,31 @@
 version: '3'
 services:
 
-  web:
-    container_name: web
+  server:
+    container_name: server
     image: suucong2877/damoacon
     expose:
       - 8080
     restart: always
     ports:
       - 8080:8080
+
+  nginx:
+    container_name: nginx
+    image: suucong2877/nginx
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - server
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
