@@ -1,11 +1,8 @@
 package com.damoacon.domain.preference.controller;
 
-import com.damoacon.domain.manager.dto.EventResponseDto;
-import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.domain.preference.dto.HeartDto;
-import com.damoacon.domain.preference.dto.HeartSimpleDto;
-import com.damoacon.domain.preference.dto.MyPageDto;
+import com.damoacon.domain.preference.dto.heart.HeartSimpleDto;
+import com.damoacon.domain.preference.dto.interest.MyPageDto;
 import com.damoacon.domain.preference.service.HeartService;
 import com.damoacon.global.common.ApiDataResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +17,7 @@ public class HeartController {
     @PostMapping ("/{event_id}")
     public ApiDataResponseDto<HeartSimpleDto> heartCreate(@PathVariable Long event_id, @AuthenticationPrincipal ContextUser contextUser){
         try {
-            HeartSimpleDto createdHeart = heartService.createHeart(event_id,contextUser);
-            return ApiDataResponseDto.of(createdHeart);
+            return ApiDataResponseDto.of(heartService.createHeart(event_id,contextUser));
         } catch (Exception e) {
             throw new IllegalArgumentException("좋아요 누르기 실패");
         }
@@ -32,14 +28,13 @@ public class HeartController {
             heartService.deleteHeart(event_id,contextUser);
             return ApiDataResponseDto.empty();
         } catch (Exception e) {
-            throw new IllegalArgumentException("좋아요 누르기 실패");
+            throw new IllegalArgumentException("좋아요 취소 실패");
         }
     }
     @GetMapping ("mypage")
     public ApiDataResponseDto<MyPageDto> myPage(@AuthenticationPrincipal ContextUser contextUser){
         try {
-            MyPageDto myPageDto=heartService.myPage(contextUser);
-            return ApiDataResponseDto.of(myPageDto);
+            return ApiDataResponseDto.of(heartService.myPage(contextUser));
         } catch (Exception e) {
             throw new IllegalArgumentException("마이페이지 조회 실패");
         }
