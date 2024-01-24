@@ -1,7 +1,7 @@
 version: '3'
 services:
 
-  web:
+  server:
     container_name: server
     image: suucong2877/damoacon
     expose:
