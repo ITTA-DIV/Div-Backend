@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/css/**")
                                 , new AntPathRequestMatcher("/images/**")
                         ).permitAll()
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/v1/member/login/oauth/google").permitAll()
                         .requestMatchers("/api/v1/member/**").permitAll()
