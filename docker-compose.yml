@@ -3,7 +3,7 @@ services:
 
   web:
     container_name: server
-    image: suucong2877/damoacon
+    image: suucong2877/damoacon:latest
     expose:
       - 8080
     restart: always
@@ -12,7 +12,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: suucong2877/nginx
+    image: suucong2877/nginx:latest
     ports:
       - 80:80
     depends_on:
