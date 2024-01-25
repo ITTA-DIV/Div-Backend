@@ -42,7 +42,13 @@ public enum ErrorCode {
     EVENT_NOT_FOUND(13000, HttpStatus.UNAUTHORIZED, "Event not found."),
 
     // Comment Error
-    COMMENT_NOT_FOUND(14000, HttpStatus.UNAUTHORIZED, "Comment not found.");
+    COMMENT_NOT_FOUND(14000, HttpStatus.UNAUTHORIZED, "Comment not found."),
+
+    // Heart Error
+    HEART_NOT_FOUND(15000, HttpStatus.UNAUTHORIZED, "Heart not found"),
+
+    // Interest Error
+    INTEREST_NOT_FOUND(16000, HttpStatus.UNAUTHORIZED, "Interest not found");
 
     private final Integer code;
     private final HttpStatus httpStatus;

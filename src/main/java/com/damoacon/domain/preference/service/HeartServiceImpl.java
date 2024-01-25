@@ -10,12 +10,10 @@ import com.damoacon.domain.preference.entity.Heart;
 import com.damoacon.domain.preference.repository.HeartRepository;
 import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.exception.GeneralException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -25,6 +23,7 @@ public class HeartServiceImpl implements HeartService {
     private final HeartRepository heartRepository;
 
     @Override
+    @Transactional
     public HeartSimpleDto createHeart(long eventId, ContextUser contextUser) {
         // 이벤트 찾기
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
@@ -52,6 +51,8 @@ public class HeartServiceImpl implements HeartService {
         return HeartSimpleDto.fromEntity(savedHeart);
     }
 
+    @Override
+    @Transactional
     public long deleteHeart(long eventId, ContextUser contextUser) {
         // 이벤트 찾기
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
@@ -60,21 +61,17 @@ public class HeartServiceImpl implements HeartService {
         Member member = contextUser.getMember();
 
         // 좋아요 객체 찾기
-        Heart existingHeart = heartRepository.findByMemberAndEvent(member, event);
+        Heart existingHeart = heartRepository.findByMemberAndEvent(member, event).orElseThrow(() -> new GeneralException(ErrorCode.HEART_NOT_FOUND));
 
-        if (existingHeart != null) {
-            // 좋아요 삭제
-            heartRepository.delete(existingHeart);
+        // 좋아요 삭제
+        heartRepository.delete(existingHeart);
 
-            // 좋아요 수 감소
-            Long cnt = event.getHeartCount();
-            cnt = cnt-1;
-            event.setHeartCount(cnt);
-            eventRepository.save(event);
+        // 좋아요 수 감소
+        Long cnt = event.getHeartCount();
+        cnt = cnt-1;
+        event.setHeartCount(cnt);
+        eventRepository.save(event);
 
-            return eventId;
-        } else {
-            throw new EntityNotFoundException("좋아요가 존재하지 않음");
-        }
+        return eventId;
     }
 }

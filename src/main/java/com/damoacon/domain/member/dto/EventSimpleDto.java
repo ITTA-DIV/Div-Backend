@@ -1,4 +1,4 @@
-package com.damoacon.domain.preference.dto.heart;
+package com.damoacon.domain.member.dto;
 
 import com.damoacon.domain.event.entity.Event;
 import lombok.Getter;
@@ -17,11 +17,8 @@ public class EventSimpleDto {
     private String host;
     private String hostProfile;
     private String type;
-
     private String thumbnail;
-
     private String category;
-
     private int remainDate;
 
     public static EventSimpleDto fromEntity(Event event) {
@@ -36,11 +33,9 @@ public class EventSimpleDto {
         dto.setType(event.getType());
         dto.setThumbnail(event.getThumbnail());
         dto.setCategory(event.getCategory().getCategory_name());
+
         return dto;
     }
-
-
-
 }
 
 

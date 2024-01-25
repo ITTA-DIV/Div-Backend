@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     public Long postComment(Long eventId, Member member, CommentRequestDto commentRequestDto) throws GeneralException {
         // validate Member and Event
         memberRepository.findById(member.getId()).orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
-        Event event = validateEvent(eventId);
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
 
         Comment comment = Comment.builder()
                 .event(event)
@@ -50,15 +50,10 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new GeneralException(ErrorCode.COMMENT_NOT_FOUND));
         memberRepository.findById(member.getId()).orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if(member.getId() != comment.getMember().getId()) { // 댓글을 작성한 멤버의 id와 댓글을 삭제하려는 멤버 id가 다른 경우
+        if(member.getId() != comment.getMember().getId()) {
             throw new IllegalArgumentException("댓글을 작성한 멤버와 삭제하려는 멤버가 일치하지 않습니다.");
         } else {
             return comment;
         }
-    }
-
-    private Event validateEvent(Long eventId) {
-
-        return eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
     }
 }

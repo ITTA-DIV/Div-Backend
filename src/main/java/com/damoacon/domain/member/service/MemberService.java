@@ -4,7 +4,7 @@ import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.domain.preference.dto.interest.MyPageDto;
+import com.damoacon.domain.member.dto.MyPageDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

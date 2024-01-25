@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     List<Interest> findAllByMember(Member member);
 
-    Interest findByMemberAndCategory(Member member, Category category);
+    Optional<Interest> findByMemberAndCategory(Member member, Category category);
 
     boolean existsByMemberAndCategory(Member member, Category category);
 }

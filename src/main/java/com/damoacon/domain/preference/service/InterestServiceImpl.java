@@ -8,10 +8,12 @@ import com.damoacon.domain.preference.dto.interest.InterestDto;
 import com.damoacon.domain.preference.dto.interest.InterestSimpleDto;
 import com.damoacon.domain.preference.entity.Interest;
 import com.damoacon.domain.preference.repository.InterestRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.damoacon.global.constant.ErrorCode;
+import com.damoacon.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,7 @@ public class InterestServiceImpl implements InterestService{
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional
     public InterestSimpleDto createInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
@@ -61,6 +64,7 @@ public class InterestServiceImpl implements InterestService{
     }
 
     @Override
+    @Transactional
     public long deleteInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
@@ -84,14 +88,10 @@ public class InterestServiceImpl implements InterestService{
 
         Member member = contextUser.getMember();
 
-        Interest existingInterest = interestRepository.findByMemberAndCategory(member, cate);
+        Interest existingInterest = interestRepository.findByMemberAndCategory(member, cate).orElseThrow(() -> new GeneralException(ErrorCode.INTEREST_NOT_FOUND));
 
-        if (existingInterest != null) {
-            interestRepository.delete(existingInterest);
+        interestRepository.delete(existingInterest);
 
-            return categoryId;
-        } else {
-            throw new EntityNotFoundException("관심분야가 존재하지 않음");
-        }
+        return categoryId;
     }
 }
