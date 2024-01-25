@@ -11,13 +11,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "https://www.damoacon.shop")
-                .exposedHeaders("Authorization")
-                .exposedHeaders("Authorization-refresh")
-                .exposedHeaders("code")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.HEAD.name(),
                         HttpMethod.POST.name(),
+                        HttpMethod.PATCH.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name());
     }
