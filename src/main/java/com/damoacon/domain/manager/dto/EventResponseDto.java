@@ -50,6 +50,7 @@ public class EventResponseDto {
         dto.setIsPermit(event.getIs_permit());
         dto.setCategory(event.getCategory().getCategory_name());  // Assuming Category has a 'name' field
         dto.setHeartCount(event.getHeartCount());
+
         return dto;
     }
 }

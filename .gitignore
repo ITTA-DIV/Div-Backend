@@ -34,6 +34,3 @@ SpringBoot-Damoacon.iml
 
 ### Security ###
 application.properties
-
-### SSL ###
-keystore.p12

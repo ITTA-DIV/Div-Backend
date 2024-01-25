@@ -1,34 +1,34 @@
 package com.damoacon.domain.manager.service;
 
-import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.event.repository.CategoryRepository;
 import com.damoacon.domain.event.repository.EventRepository;
 import com.damoacon.domain.manager.dto.EventCreateDto;
 import com.damoacon.domain.manager.dto.EventResponseDto;
 import com.damoacon.domain.manager.repository.EventManagerRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.damoacon.global.constant.ErrorCode;
+import com.damoacon.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ManagerServiceImpl implements ManagerService{
-
+public class ManagerServiceImpl implements ManagerService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final EventManagerRepository eventManagerRepository;
+
     @Override
+    @Transactional
     public EventResponseDto eventCreate(EventCreateDto requestDto){
-        String cate= requestDto.getCategory();
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
         categoryMapping.put("IT/프로그래밍", 2l);
@@ -45,31 +45,28 @@ public class ManagerServiceImpl implements ManagerService{
         categoryMapping.put("행사 기획", 13l);
         categoryMapping.put("관광/여행", 14l);
         categoryMapping.put("기타", 15l);
-        Long categoryId = categoryMapping.get(cate);
 
-        Optional<Category> cateOptional = categoryRepository.findById(categoryId);
-        Category category = cateOptional.orElseThrow(() -> new EntityNotFoundException("Categoty not found with id: " + cate));
-
-        Event newEvent = eventRepository.save(requestDto.toEntity(category));
-        return EventResponseDto.fromEntity(newEvent);
+        return EventResponseDto.fromEntity(eventRepository.save(requestDto.toEntity(categoryRepository.findById(categoryMapping.get(requestDto.getCategory()))
+                .orElseThrow(() -> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND)))));
     }
+
     @Override
+    @Transactional(readOnly = true)
     public List<EventResponseDto> eventApplyList(){
         List<Event> unpermittedEvents = eventManagerRepository.findNotPermit();
+
         return unpermittedEvents.stream()
                 .map(EventResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public EventResponseDto eventApplyPermit(Long event_id){
-        Optional<Event> optionalEvent = eventRepository.findById(event_id);
+    @Transactional
+    public EventResponseDto eventApplyPermit(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
 
-        Event event = optionalEvent.get();
         event.setIs_permit(1);
 
-        Event updatedEvent = eventRepository.save(event);
-
-        return EventResponseDto.fromEntity(updatedEvent);
+        return EventResponseDto.fromEntity(eventRepository.save(event));
     }
 }

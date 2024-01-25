@@ -26,10 +26,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-#    - name: Copy keystore.p12
-#      run : |
-#        cd ./SpringBoot-Damoacon/src/main/resources && touch ./keystore.p12 && echo "${{ secrets.KEY_STORE_P12 }}" | base64 --decode > ./keystore.p12
-
     - name: Make application-prod.yml
       run: |
         cd ./src/main/resources && touch ./application-prod.yml && echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml

@@ -14,14 +14,14 @@ import java.util.function.Predicate;
 public enum ErrorCode {
     OK(0, HttpStatus.OK, "Ok"),
 
-    BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request"),
-    VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
-    NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
+    BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request."),
+    VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error."),
+    NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found."),
 
-    INTERNAL_SERVER_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
-    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
+    INTERNAL_SERVER_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error."),
+    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error."),
 
-    AUTHENTICATION_FAILED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized"),
+    AUTHENTICATION_FAILED(40000, HttpStatus.UNAUTHORIZED, "User unauthorized."),
     AUTHORIZATION_FAILED(40001, HttpStatus.UNAUTHORIZED, "Authorization failed."),
     ACCESS_TOKEN_REQUIRED(40002, HttpStatus.UNAUTHORIZED, "Access Token required."),
     REFRESH_TOKEN_REQUIRED(40003, HttpStatus.UNAUTHORIZED, "Refresh Token required."),
@@ -45,10 +45,13 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(14000, HttpStatus.UNAUTHORIZED, "Comment not found."),
 
     // Heart Error
-    HEART_NOT_FOUND(15000, HttpStatus.UNAUTHORIZED, "Heart not found"),
+    HEART_NOT_FOUND(15000, HttpStatus.UNAUTHORIZED, "Heart not found."),
 
     // Interest Error
-    INTEREST_NOT_FOUND(16000, HttpStatus.UNAUTHORIZED, "Interest not found");
+    INTEREST_NOT_FOUND(16000, HttpStatus.UNAUTHORIZED, "Interest not found."),
+
+    // Category Error
+    CATEGORY_NOT_FOUND(17000, HttpStatus.UNAUTHORIZED, "Category not found.");
 
     private final Integer code;
     private final HttpStatus httpStatus;
