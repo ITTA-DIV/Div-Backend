@@ -10,10 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedOrigins("https://itta-div.vercel.app")
-                .allowedHeaders("Authorization")
-                .allowedHeaders("Authorization-refresh")
+                .allowedOrigins("http://localhost:3000", "https://www.damoacon.shop")
+                .exposedHeaders("Authorization")
+                .exposedHeaders("Authorization-refresh")
+                .exposedHeaders("code")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.HEAD.name(),
