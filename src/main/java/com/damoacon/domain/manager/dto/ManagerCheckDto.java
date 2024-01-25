@@ -12,7 +12,5 @@ import lombok.Setter;
 public class ManagerCheckDto {
     private Long id;
     private String username;
-
     private boolean isManager;
-
 }

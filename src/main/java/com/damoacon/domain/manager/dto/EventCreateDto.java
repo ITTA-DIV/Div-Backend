@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -49,7 +47,6 @@ public class EventCreateDto {
     @NotBlank(message = "There is no type")
     private String type;
 
-
     private String thumbnail;
 
     private int is_permit;
@@ -60,7 +57,7 @@ public class EventCreateDto {
     private Long heartCount = 0L;
 
     public Event toEntity(Category category) {
-        int is_permit=0;
+
         return Event.builder()
                 .title(title)
                 .startDate(star_date)
@@ -75,7 +72,7 @@ public class EventCreateDto {
                 .applyEndDate(applyEndDate)
                 .type(type)
                 .thumbnail(thumbnail)
-                .isPermit(is_permit)
+                .isPermit(0)
                 .category(category)
                 .build();
     }

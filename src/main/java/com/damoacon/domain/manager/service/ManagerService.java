@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ManagerService {
     EventResponseDto eventCreate(EventCreateDto requestDto);
+
     List<EventResponseDto> eventApplyList();
-    EventResponseDto eventApplyPermit(Long event_id);
+
+    EventResponseDto eventApplyPermit(Long eventId);
 }
