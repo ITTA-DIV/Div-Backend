@@ -1,7 +1,7 @@
 package com.damoacon.domain.preference.controller;
 
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.domain.preference.dto.InterestSimpleDto;
+import com.damoacon.domain.preference.dto.interest.InterestSimpleDto;
 import com.damoacon.domain.preference.service.InterestService;
 import com.damoacon.global.common.ApiDataResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,7 @@ public class InterestController {
     @PostMapping("create")
     public ApiDataResponseDto<InterestSimpleDto> interestCreate(@RequestParam(name = "category") String category, @AuthenticationPrincipal ContextUser contextUser){
         try {
-            InterestSimpleDto createdInterest = interestService.createInterest(category,contextUser);
-            return ApiDataResponseDto.of(createdInterest);
+            return ApiDataResponseDto.of(interestService.createInterest(category,contextUser));
         } catch (Exception e) {
             throw new IllegalArgumentException("관심분야 등록 실패");
         }

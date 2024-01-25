@@ -1,4 +1,4 @@
-package com.damoacon.domain.preference.dto;
+package com.damoacon.domain.preference.dto.heart;
 
 import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.event.entity.Event;

@@ -22,8 +22,7 @@ public class ManagerController {
     @PostMapping("create")
     public ApiDataResponseDto<EventResponseDto> save(@RequestBody EventCreateDto requestDto){
         try{
-            EventResponseDto newEvents = managerService.eventCreate(requestDto);
-            return ApiDataResponseDto.of(newEvents);
+            return ApiDataResponseDto.of(managerService.eventCreate(requestDto));
         } catch (Exception e) {
             throw new IllegalArgumentException("이벤트 신청 생성 실패.title이 중복되는 event는 등록할수 없습니다");
         }
@@ -32,8 +31,7 @@ public class ManagerController {
     @GetMapping("applylist")
     public ApiDataResponseDto<List<EventResponseDto>> applyList(){
         try {
-            List<EventResponseDto> applyeventlist = managerService.eventApplyList();
-            return ApiDataResponseDto.of(applyeventlist);
+            return ApiDataResponseDto.of(managerService.eventApplyList());
         } catch (Exception e) {
             throw new IllegalArgumentException("이벤트 신청 목록 조회 실패");
         }
@@ -42,8 +40,7 @@ public class ManagerController {
     @PatchMapping("/{event_id}")
     public ApiDataResponseDto<EventResponseDto> changePermit(@PathVariable Long event_id){
         try {
-            EventResponseDto changeApplyEvent = managerService.eventApplyPermit(event_id);
-            return ApiDataResponseDto.of(changeApplyEvent);
+            return ApiDataResponseDto.of(managerService.eventApplyPermit(event_id));
         } catch (Exception e) {
             throw new IllegalArgumentException("이벤트 요청 승인 실패");
         }

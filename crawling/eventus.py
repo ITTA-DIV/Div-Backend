@@ -84,9 +84,7 @@ def crawl_page(page):
     tuples=[]
     for event in events:
         print("----------------------------")
-#         if(cnt>3):
-# #             print("충분히 업데이트 된 것 같습니다")
-#             return -1
+
         href_value = event.get('href')
         driver.get(f"https://event-us.kr/{href_value}")
         new_page_html = driver.page_source
@@ -111,24 +109,15 @@ def crawl_page(page):
         title = title.replace('\'', '')
         print(title)
 
-#         cursor.execute("SELECT COUNT(*) FROM `events` WHERE title = %s", (title))
-#         count = cursor.fetchone()[0]
-
-#         if count > 0:
-# #             print(f"'{title}' 이미 존재..")
-#             cnt=cnt+1
-#             continue
-
         infoSection=new_page_soup.find('section', {'id': 'infoSection'})
 
-        # startdate, enddate 처리 - - - - - - - - - - -- - - - - - - - -
+        # startdate, enddate 처리
         date_data=infoSection.dl.find_all('div')[1].dd.span.text[1:]
-#         print(date_data)
-        startdate, enddate = parse_date_data(date_data)
-
-#         print("startdate:", startdate)
-#         print("enddate:", enddate)
-        #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        if(len(date_data)>3):
+            startdate, enddate = parse_date_data(date_data)
+        else:
+            startdate=""
+            enddate=""
 
         price=infoSection.dl.find_all('div')[2].dd.span.text
         price = price.replace(',', '')
@@ -155,7 +144,6 @@ def crawl_page(page):
             address=address[1].dd.div.text[1:].replace('\'', '')
         else:
             address=""
-#         print(address)
 
         # 카테고리 외래키 처리 - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         category_str=new_page_soup.find('a', {'class': 'pr-2 text-xs'}).text
@@ -180,37 +168,29 @@ def crawl_page(page):
         category_id=category_mapping[category_str]
         if category_id ==15:
             continue
-#         print(category_id)
-
-
-        #  - - - - - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - -
 
         host=new_page_soup.find('div',{'class':'font-bold flex flex-col'}).text[1:]
-#         print(host)
 
         host_profile=new_page_soup.find('img',{'class':'aspect-1 h-6 w-6 object-cover rounded-full border'})
         if host_profile is not None:
             host_profile=host_profile.get('src')
         else: # 이미지가 없는 경우
             host_profile=""
-#         print(host_profile)
+
 
         link=new_page_soup.find('form',{'class':'space-y-4'}).get('action')
         link="https://event-us.kr"+link
-#         print(link)
+
 
         applydate=infoSection.dl.find_all('div')[0].dd.span.text[1:]
-        print(applydate)
-        applystart, applyend = parse_date_data(applydate)
-
-#         print("applystart:", applystart)
-#         print("applyend:", applyend)
-
+        if(len(date_data)>3):
+            applystart, applyend = parse_date_data(applydate)
+        else:
+            applystart=""
+            applyend=""
 
         thumbnail=new_page_soup.find('img',{'class':'w-full rounded-md border'}).get('src')
-#         print(thumbnail)
 
-        # is_permit 추가
         is_permit = 1
 
         count+=1
