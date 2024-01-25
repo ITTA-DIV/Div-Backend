@@ -1,5 +1,6 @@
 package com.damoacon.domain.member.service;
 
+import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
@@ -75,6 +76,18 @@ public class MemberServiceImpl implements MemberService {
             throw new GeneralException(ErrorCode.INVALID_CODE);
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberResponseDto getMember(Member member) {
+
+        return MemberResponseDto.builder()
+                .id(member.getId())
+                .username(member.getUsername())
+                .profile(member.getProfile())
+                .build();
+    }
+
 
     // Google API Server 에서 받아온 code를 통해 구글에 토큰 요청
     private GoogleLoginResponse requestAccessToken(String code) {
