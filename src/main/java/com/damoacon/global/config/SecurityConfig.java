@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/v1/member/login/oauth/google").permitAll()
                         .requestMatchers("/api/v1/manager/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/api/v1/event/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationProcessingFilter(jwtUtil, responseUtil), UsernamePasswordAuthenticationFilter.class)
