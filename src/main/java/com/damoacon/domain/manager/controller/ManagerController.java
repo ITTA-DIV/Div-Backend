@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.damoacon.global.common.ApiDataResponseDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.damoacon.domain.model.ContextUser;
-import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class ManagerController {
         try{
             Long memberId = contextUser.getMember().getId();
             String memberUserName = contextUser.getMember().getUsername();
-            boolean memberIsManager = Role.ADMIN.equals(contextUser.getMember().getRole());
+            boolean memberIsManager = Role.ROLE_USER.equals(contextUser.getMember().getRole());
 
             ManagerCheckDto managerCheckDto = new ManagerCheckDto(memberId, memberUserName, memberIsManager);
             return ApiDataResponseDto.of(managerCheckDto);

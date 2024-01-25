@@ -8,10 +8,12 @@ import com.damoacon.domain.preference.dto.interest.InterestDto;
 import com.damoacon.domain.preference.dto.interest.InterestSimpleDto;
 import com.damoacon.domain.preference.entity.Interest;
 import com.damoacon.domain.preference.repository.InterestRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.damoacon.global.constant.ErrorCode;
+import com.damoacon.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +25,10 @@ import java.util.Optional;
 public class InterestServiceImpl implements InterestService{
     private final InterestRepository interestRepository;
     private final CategoryRepository categoryRepository;
+
     @Override
-    public InterestSimpleDto createInterest(String category, ContextUser contextUser){
+    @Transactional
+    public InterestSimpleDto createInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
         categoryMapping.put("IT/프로그래밍", 2l);
@@ -60,7 +64,8 @@ public class InterestServiceImpl implements InterestService{
     }
 
     @Override
-    public void deleteInterest(String category, ContextUser contextUser){
+    @Transactional
+    public long deleteInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
         categoryMapping.put("IT/프로그래밍", 2l);
@@ -83,14 +88,10 @@ public class InterestServiceImpl implements InterestService{
 
         Member member = contextUser.getMember();
 
-        Interest existingInterest = interestRepository.findByMemberAndCategory(member, cate);
+        Interest existingInterest = interestRepository.findByMemberAndCategory(member, cate).orElseThrow(() -> new GeneralException(ErrorCode.INTEREST_NOT_FOUND));
 
-        if (existingInterest != null) {
-            interestRepository.delete(existingInterest);
-        } else {
-            throw new EntityNotFoundException("관심분야가 존재하지 않음");
-        }
+        interestRepository.delete(existingInterest);
 
+        return categoryId;
     }
-
 }

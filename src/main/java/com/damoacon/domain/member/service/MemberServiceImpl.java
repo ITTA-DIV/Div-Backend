@@ -1,10 +1,20 @@
 package com.damoacon.domain.member.service;
 
+import com.damoacon.domain.event.entity.Category;
+import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.repository.MemberRepository;
+import com.damoacon.domain.model.ContextUser;
+import com.damoacon.domain.member.dto.EventSimpleDto;
+import com.damoacon.domain.member.dto.MemberSimpleDto;
+import com.damoacon.domain.member.dto.MyPageDto;
+import com.damoacon.domain.preference.entity.Heart;
+import com.damoacon.domain.preference.entity.Interest;
+import com.damoacon.domain.preference.repository.HeartRepository;
+import com.damoacon.domain.preference.repository.InterestRepository;
 import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.exception.GeneralException;
 import com.damoacon.global.util.JwtUtil;
@@ -20,8 +30,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +50,8 @@ public class MemberServiceImpl implements MemberService {
     private String GOOGLE_TOKEN_BASE_URL;
 
     private final MemberRepository memberRepository;
+    private final InterestRepository interestRepository;
+    private final HeartRepository heartRepository;
     private final JwtUtil jwtUtil;
     private final ResponseUtil responseUtil;
 
@@ -51,40 +64,13 @@ public class MemberServiceImpl implements MemberService {
                 .profile(googleUserInformation.getPicture())
                 .build();
 
-        Optional<Member> existingMemberOptional = memberRepository.findOneByEmail(requestMember.getEmail());
+        Member member = memberRepository.findOneByEmail(requestMember.getEmail())
+                .orElseGet(() -> memberRepository.save(requestMember));
 
-        if (existingMemberOptional.isPresent()) {
-            requestMember = existingMemberOptional.get();
-        } else {
-            requestMember = memberRepository.save(requestMember);
-        }
-
-        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(requestMember));
+        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, jwtUtil.generateTokens(member));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public MemberResponseDto getMember(Long id) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-
-            MemberResponseDto memberResponseDto = MemberResponseDto.builder()
-                    .id(member.getId())
-                    .username(member.getUsername())
-                    .profile(member.getProfile())
-                    .email(member.getEmail())
-                    .nickname(member.getNickname())
-                    .build();
-
-            return memberResponseDto;
-        } else {
-            throw new IllegalArgumentException("해당 id에 해당하는 멤버가 없습니다. id = " + id);
-        }
-    }
-
-    // id_token을 통해 구글에서 유저정보를 요청해 반환 받는 메소드
+    // id_token을 통해 구글에서 유저정보를 요청해 반환
     @Override
     @Transactional
     public GoogleUserInformation getUserInformation(HttpServletRequest request) {
@@ -105,13 +91,48 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    /**
-     *
-     * @param code Google API Server 에서 받아온 code
-     * @return 를 바탕으로 유저정보를 요청할 수 있는 GoogleLoginResponse를 반환
-     */
     @Override
-    public GoogleLoginResponse requestAccessToken(String code) {
+    @Transactional(readOnly = true)
+    public MemberResponseDto getMember(Member member) {
+
+        return MemberResponseDto.builder()
+                .id(member.getId())
+                .username(member.getUsername())
+                .profile(member.getProfile())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MyPageDto myPage(ContextUser contextUser) {
+        Member member = contextUser.getMember();
+
+        // 회원 정보
+        List<Interest> interests = interestRepository.findAllByMember(member);
+        List<Category> categories = interests.stream()
+                .map(Interest::getCategory)
+                .collect(Collectors.toList());
+
+        MemberSimpleDto memberSimpleDto = new MemberSimpleDto(member, categories);
+
+        // 좋아요한 이벤트 개수
+        int heartCount = heartRepository.countByMember(member);
+
+        // 좋아요한 이벤트
+        List<Heart> hearts = heartRepository.findByMemberOrderByIdDesc(member);
+        List<Event> heartevents = hearts.stream()
+                .map(Heart::getEvent)
+                .collect(Collectors.toList());
+        List<EventSimpleDto> hearteventsdto = heartevents.stream()
+                .map(EventSimpleDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new MyPageDto(memberSimpleDto, heartCount, hearteventsdto);
+    }
+
+
+    // Google API Server 에서 받아온 code를 통해 구글에 토큰 요청
+    private GoogleLoginResponse requestAccessToken(String code) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -122,12 +143,9 @@ public class MemberServiceImpl implements MemberService {
             params.put("redirect_uri", GOOGLE_REDIRECT_URI);
             params.put("grant_type", "authorization_code");
 
-            GoogleLoginResponse googleLoginResponse =
-                    restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL + "/token", params, GoogleLoginResponse.class).getBody();
-
-            return googleLoginResponse;
+            return restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL + "/token", params, GoogleLoginResponse.class).getBody();
         } catch (Exception e) {
-            throw new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다 :: " + GOOGLE_TOKEN_BASE_URL);
+            throw new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다: " + GOOGLE_TOKEN_BASE_URL);
         }
     }
 }

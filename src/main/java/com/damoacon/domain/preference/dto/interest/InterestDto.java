@@ -16,7 +16,7 @@ public class InterestDto {
     private Member member;
     private Category category;
 
-    public Interest toEntity(Member member,Category category) {
+    public Interest toEntity(Member member, Category category) {
         return Interest.builder()
                 .member(member)
                 .category(category)

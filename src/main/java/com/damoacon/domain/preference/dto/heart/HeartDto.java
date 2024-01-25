@@ -1,6 +1,5 @@
 package com.damoacon.domain.preference.dto.heart;
 
-import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.preference.entity.Heart;
@@ -23,5 +22,4 @@ public class HeartDto {
                 .event(event)
                 .build();
     }
-
 }

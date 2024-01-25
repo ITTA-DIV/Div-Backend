@@ -27,9 +27,6 @@ public class Member {
     @Column(nullable = false, name = "email")
     private String email;
 
-    @Column(nullable = true, name = "nickname")
-    private String nickname;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -39,6 +36,6 @@ public class Member {
         this.username = username;
         this.profile = profile;
         this.email = email;
-        this.role = Role.USER;
+        this.role = Role.ROLE_USER;
     }
 }

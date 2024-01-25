@@ -1,7 +1,5 @@
-package com.damoacon.domain.preference.dto.interest;
+package com.damoacon.domain.member.dto;
 
-import com.damoacon.domain.preference.dto.heart.EventSimpleDto;
-import com.damoacon.domain.preference.dto.heart.MemberSimpleDto;
 import lombok.Getter;
 import lombok.Setter;
 

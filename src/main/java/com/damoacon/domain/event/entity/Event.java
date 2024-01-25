@@ -77,7 +77,6 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
 
-
     @Column(name = "heart_count")
     @NotNull
     private Long heartCount = 0L;
@@ -101,7 +100,7 @@ public class Event {
         this.category = category;
     }
 
-    //retainAll()이 작동하도록 하기 위함
+    // retainAll()이 작동하도록 하기 위함
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

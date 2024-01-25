@@ -1,11 +1,10 @@
-package com.damoacon.domain.event.controller;
-
+package com.damoacon.domain.event.service;
 
 import com.damoacon.domain.event.dto.SearchRequestDto;
 import com.damoacon.domain.event.dto.SearchResponseDto;
 import com.damoacon.domain.event.repository.EventRepository;
-import com.damoacon.domain.event.service.EventService;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,15 +16,15 @@ import java.sql.Timestamp;
 
 @SpringBootTest
 @Log4j2
-public class SearchTest {
-
+public class EventServiceTest {
     @Autowired
     EventRepository eventRepository;
     @Autowired
     EventService eventService;
 
     @Test
-    void SearchServiceTest() {
+    @DisplayName("getSearchEvents() Test")
+    void getSearchEventTest() {
         SearchRequestDto s = SearchRequestDto.builder()
                 .category_name("창업")
                 .address("서울")
@@ -33,6 +32,7 @@ public class SearchTest {
                 .start_date(Timestamp.valueOf("2023-12-29 00:00:00"))
                 .end_date(Timestamp.valueOf("2024-01-17 17:00:00"))
                 .build();
+
         Pageable pageable = PageRequest.of(0, 18);
         Page<SearchResponseDto> searchResponseDtoList = eventService.getSearchEvents(s, pageable);
         searchResponseDtoList.getContent().stream().forEach(event -> log.info("id: " + event.getId() + "\n" +
@@ -42,22 +42,4 @@ public class SearchTest {
                 "date: " + event.getEventDateTimeString() + "\n" +
                 "location: " + event.getLocation()));
     }
-
-//    @Test
-//    void searchRepositoryTest() {
-////        List<Event> eventList = eventRepository.findEventByKeyword("keyword");
-////        List<Event> eventList = eventRepository.findEventByDate(Timestamp.valueOf("2024-01-02 00:00:00"), Timestamp.valueOf("2024-01-31 17:00:00"));
-////        log.info(eventList);
-////        List<Event> eventList = eventRepository.findEventsByAddress("서울");
-////        List<Event> eventList = eventRepository.findEventsByPriceRange(40000L, 70000L);
-////        log.info(eventList);
-////        List<Event> eventList = eventRepository.findEventsByCategoryName("창업");
-////        eventList.stream().forEach(event -> {
-////            log.info(event);
-////        });
-////        List<Event> eventList = eventRepository.findEventsByType("커뮤니티");
-////        log.info(eventList);
-////        List<Event> eventList = eventRepository.findEventsByLocation("온라인");
-////        log.info(eventList);
-//    }
 }

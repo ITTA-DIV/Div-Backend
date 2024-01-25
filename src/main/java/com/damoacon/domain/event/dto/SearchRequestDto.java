@@ -1,6 +1,5 @@
 package com.damoacon.domain.event.dto;
 
-
 import lombok.*;
 
 import java.sql.Timestamp;

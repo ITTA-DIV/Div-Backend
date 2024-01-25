@@ -9,25 +9,21 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("api/v1/interest")
+@RequestMapping("/api/v1/interest")
 public class InterestController {
     private final InterestService interestService;
-    @PostMapping("create")
-    public ApiDataResponseDto<InterestSimpleDto> interestCreate(@RequestParam(name = "category") String category, @AuthenticationPrincipal ContextUser contextUser){
-        try {
-            return ApiDataResponseDto.of(interestService.createInterest(category,contextUser));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("관심분야 등록 실패");
-        }
+
+    @PostMapping
+    public ApiDataResponseDto<InterestSimpleDto> interestCreate(@RequestParam(name = "category")String category, @AuthenticationPrincipal ContextUser contextUser) {
+
+        return ApiDataResponseDto.of(interestService.createInterest(category,contextUser));
     }
-    @DeleteMapping("delete")
-    public ApiDataResponseDto<InterestSimpleDto> heartDelete(@RequestParam(name = "category") String category, @AuthenticationPrincipal ContextUser contextUser){
-        try {
-            interestService.deleteInterest(category,contextUser);
-            return ApiDataResponseDto.empty();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("관심분야 취소 실패");
-        }
+
+    @DeleteMapping
+    public ApiDataResponseDto heartDelete(@RequestParam(name = "category")String category, @AuthenticationPrincipal ContextUser contextUser) {
+
+        return ApiDataResponseDto.of(interestService.deleteInterest(category,contextUser));
     }
 }
