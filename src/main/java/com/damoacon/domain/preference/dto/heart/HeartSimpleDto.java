@@ -13,11 +13,11 @@ import lombok.Setter;
 public class HeartSimpleDto {
     private long memberId;
     private long eventId;
+
     public static HeartSimpleDto fromEntity(Heart heart) {
         HeartSimpleDto heartSimpleDto = new HeartSimpleDto();
         heartSimpleDto.setMemberId(heart.getMember().getId());
         heartSimpleDto.setEventId(heart.getEvent().getId());
         return heartSimpleDto;
     }
-
 }

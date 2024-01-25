@@ -58,8 +58,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Event validateEvent(Long eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
 
-        return event;
+        return eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
     }
 }

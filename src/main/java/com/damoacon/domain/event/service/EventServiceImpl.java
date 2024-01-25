@@ -250,7 +250,8 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getComments(Long eventId, Member member) {
-        List<Comment> comments = commentRepository.findCommentsByEventId(validateEvent(eventId).getId());
+        List<Comment> comments = commentRepository.findCommentsByEventId(
+                eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND)).getId());
 
         return comments.stream()
                 .map(comment -> toResponse(comment, member))
@@ -308,12 +309,6 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
-    }
-
-    private Event validateEvent(Long eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
-
-        return event;
     }
 
     private CommentResponseDto toResponse(Comment comment, Member member) {

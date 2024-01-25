@@ -3,7 +3,8 @@ package com.damoacon.domain.member.service;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
-import com.damoacon.global.common.ApiDataResponseDto;
+import com.damoacon.domain.model.ContextUser;
+import com.damoacon.domain.preference.dto.interest.MyPageDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -15,4 +16,6 @@ public interface MemberService {
     void checkIsUserAndRegister(HttpServletResponse response, GoogleUserInformation googleUserInformation) throws IOException;
 
     MemberResponseDto getMember(Member member);
+
+    MyPageDto myPage(ContextUser contextUser);
 }

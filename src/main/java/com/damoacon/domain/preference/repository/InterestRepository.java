@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     List<Interest> findAllByMember(Member member);
+
     Interest findByMemberAndCategory(Member member, Category category);
+
     boolean existsByMemberAndCategory(Member member, Category category);
 }

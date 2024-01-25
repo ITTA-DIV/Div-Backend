@@ -3,6 +3,7 @@ package com.damoacon.domain.member.controller;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.service.MemberService;
 import com.damoacon.domain.model.ContextUser;
+import com.damoacon.domain.preference.dto.interest.MyPageDto;
 import com.damoacon.global.common.ApiDataResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,5 +33,11 @@ public class MemberController {
     public ApiDataResponseDto<MemberResponseDto> getMember(@AuthenticationPrincipal ContextUser contextUser) {
 
         return ApiDataResponseDto.of(memberService.getMember(contextUser.getMember()));
+    }
+
+    @GetMapping("/mypage")
+    public ApiDataResponseDto<MyPageDto> myPage(@AuthenticationPrincipal ContextUser contextUser) {
+
+        return ApiDataResponseDto.of(memberService.myPage(contextUser));
     }
 }

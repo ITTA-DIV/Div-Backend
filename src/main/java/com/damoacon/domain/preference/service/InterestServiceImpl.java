@@ -23,8 +23,9 @@ import java.util.Optional;
 public class InterestServiceImpl implements InterestService{
     private final InterestRepository interestRepository;
     private final CategoryRepository categoryRepository;
+
     @Override
-    public InterestSimpleDto createInterest(String category, ContextUser contextUser){
+    public InterestSimpleDto createInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
         categoryMapping.put("IT/프로그래밍", 2l);
@@ -60,7 +61,7 @@ public class InterestServiceImpl implements InterestService{
     }
 
     @Override
-    public void deleteInterest(String category, ContextUser contextUser){
+    public long deleteInterest(String category, ContextUser contextUser) {
         Map<String, Long> categoryMapping = new HashMap<>();
         categoryMapping.put("창업", 1l);
         categoryMapping.put("IT/프로그래밍", 2l);
@@ -87,10 +88,10 @@ public class InterestServiceImpl implements InterestService{
 
         if (existingInterest != null) {
             interestRepository.delete(existingInterest);
+
+            return categoryId;
         } else {
             throw new EntityNotFoundException("관심분야가 존재하지 않음");
         }
-
     }
-
 }

@@ -1,10 +1,20 @@
 package com.damoacon.domain.member.service;
 
+import com.damoacon.domain.event.entity.Category;
+import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.member.dto.MemberResponseDto;
 import com.damoacon.domain.member.entity.Member;
 import com.damoacon.domain.member.dto.GoogleLoginResponse;
 import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.repository.MemberRepository;
+import com.damoacon.domain.model.ContextUser;
+import com.damoacon.domain.preference.dto.heart.EventSimpleDto;
+import com.damoacon.domain.preference.dto.heart.MemberSimpleDto;
+import com.damoacon.domain.preference.dto.interest.MyPageDto;
+import com.damoacon.domain.preference.entity.Heart;
+import com.damoacon.domain.preference.entity.Interest;
+import com.damoacon.domain.preference.repository.HeartRepository;
+import com.damoacon.domain.preference.repository.InterestRepository;
 import com.damoacon.global.constant.ErrorCode;
 import com.damoacon.global.exception.GeneralException;
 import com.damoacon.global.util.JwtUtil;
@@ -20,7 +30,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +50,8 @@ public class MemberServiceImpl implements MemberService {
     private String GOOGLE_TOKEN_BASE_URL;
 
     private final MemberRepository memberRepository;
+    private final InterestRepository interestRepository;
+    private final HeartRepository heartRepository;
     private final JwtUtil jwtUtil;
     private final ResponseUtil responseUtil;
 
@@ -86,6 +100,34 @@ public class MemberServiceImpl implements MemberService {
                 .username(member.getUsername())
                 .profile(member.getProfile())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MyPageDto myPage(ContextUser contextUser) {
+        Member member = contextUser.getMember();
+
+        // 회원 정보
+        List<Interest> interests = interestRepository.findAllByMember(member);
+        List<Category> categories = interests.stream()
+                .map(Interest::getCategory)
+                .collect(Collectors.toList());
+
+        MemberSimpleDto memberSimpleDto = new MemberSimpleDto(member, categories);
+
+        // 좋아요한 이벤트 개수
+        int heartCount = heartRepository.countByMember(member);
+
+        // 좋아요한 이벤트
+        List<Heart> hearts = heartRepository.findByMemberOrderByIdDesc(member);
+        List<Event> heartevents = hearts.stream()
+                .map(Heart::getEvent)
+                .collect(Collectors.toList());
+        List<EventSimpleDto> hearteventsdto = heartevents.stream()
+                .map(EventSimpleDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new MyPageDto(memberSimpleDto, heartCount, hearteventsdto);
     }
 
 
