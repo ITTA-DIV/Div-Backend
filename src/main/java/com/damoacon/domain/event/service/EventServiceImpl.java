@@ -6,6 +6,12 @@ import com.damoacon.domain.event.dto.SearchRequestDto;
 import com.damoacon.domain.event.dto.SearchResponseDto;
 import com.damoacon.domain.event.entity.Event;
 import com.damoacon.domain.event.repository.EventRepository;
+import com.damoacon.domain.member.entity.Member;
+import com.damoacon.domain.preference.dto.comment.CommentResponseDto;
+import com.damoacon.domain.preference.entity.Comment;
+import com.damoacon.domain.preference.repository.CommentRepository;
+import com.damoacon.global.constant.ErrorCode;
+import com.damoacon.global.exception.GeneralException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -240,6 +247,16 @@ public class EventServiceImpl implements EventService {
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getComments(Long eventId, Member member) {
+        List<Comment> comments = commentRepository.findCommentsByEventId(validateEvent(eventId).getId());
+
+        return comments.stream()
+                .map(comment -> toResponse(comment, member))
+                .collect(Collectors.toList());
+    }
+
     // entity to dto
     private List<MainEventResponseDto> mapEventListToDtoList(List<Event> events) {
         // 원하는 event startDate 문자열 형식
@@ -291,5 +308,28 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(searchResponseDtoList, pageable, searchResponseDtoList.size());
+    }
+
+    private Event validateEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new GeneralException(ErrorCode.EVENT_NOT_FOUND));
+
+        return event;
+    }
+
+    private CommentResponseDto toResponse(Comment comment, Member member) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm");
+
+        boolean isMine = false;
+        if (member != null) isMine = member.getId().equals(comment.getMember().getId());
+
+        return CommentResponseDto.builder()
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .creationTime(comment.getLastModifiedTime().format(formatter))
+                .writerId(comment.getMember().getId())
+                .writerName(comment.getMember().getUsername())
+                .writerProfile(comment.getMember().getProfile())
+                .isMine(isMine)
+                .build();
     }
 }
