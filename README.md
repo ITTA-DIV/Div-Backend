@@ -4,7 +4,7 @@
 <p align="center"><img width="750" alt="image" src="https://github.com/ITTA-DIV/Div-Backend/assets/109707230/404903e8-40eb-491e-b21e-4e6200eeae35"></p>
 
 ## <p align="center"> 📄ERD </p>
-<p align="center"><img width="750" alt="image" src="https://github.com/ITTA-DIV/Div-Backend/assets/109707230/4e9fb0c3-1e81-4061-a2e6-7568638d205d"></p>
+<p align="center"><img width="750" alt="image" src="https://github.com/ITTA-DIV/Div-Backend/assets/109707230/b130e900-cadb-4b65-a6d0-746c5bd300d6"></p>
 
 ## <p align="center"> 🌈 Member</p>
 |노수진|허채린|
