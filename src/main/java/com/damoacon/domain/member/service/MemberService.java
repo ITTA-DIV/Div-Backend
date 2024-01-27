@@ -18,4 +18,6 @@ public interface MemberService {
     MemberResponseDto getMember(Member member);
 
     MyPageDto myPage(ContextUser contextUser);
+
+    void getRefresh(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }
