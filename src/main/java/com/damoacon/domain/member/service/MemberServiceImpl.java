@@ -2,15 +2,10 @@ package com.damoacon.domain.member.service;
 
 import com.damoacon.domain.event.entity.Category;
 import com.damoacon.domain.event.entity.Event;
-import com.damoacon.domain.member.dto.MemberResponseDto;
+import com.damoacon.domain.member.dto.*;
 import com.damoacon.domain.member.entity.Member;
-import com.damoacon.domain.member.dto.GoogleLoginResponse;
-import com.damoacon.domain.member.dto.GoogleUserInformation;
 import com.damoacon.domain.member.repository.MemberRepository;
 import com.damoacon.domain.model.ContextUser;
-import com.damoacon.domain.member.dto.EventSimpleDto;
-import com.damoacon.domain.member.dto.MemberSimpleDto;
-import com.damoacon.domain.member.dto.MyPageDto;
 import com.damoacon.domain.preference.entity.Heart;
 import com.damoacon.domain.preference.entity.Interest;
 import com.damoacon.domain.preference.repository.HeartRepository;
@@ -130,6 +125,18 @@ public class MemberServiceImpl implements MemberService {
         return new MyPageDto(memberSimpleDto, heartCount, hearteventsdto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public void getRefresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String refreshToken = jwtUtil.decodeHeader(false, request);
+
+        // refresh_token 만료 검증
+        jwtUtil.validateToken(refreshToken);
+        Member member = jwtUtil.getMember(refreshToken);
+        LoginResponseDto dto = jwtUtil.generateTokens(member);
+
+        responseUtil.setDataResponse(response, HttpServletResponse.SC_CREATED, dto);
+    }
 
     // Google API Server 에서 받아온 code를 통해 구글에 토큰 요청
     private GoogleLoginResponse requestAccessToken(String code) {
